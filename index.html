@@ -10,6 +10,7 @@
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-regular-straight/css/uicons-regular-straight.css'>
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
         
@@ -261,9 +262,12 @@
 
     <script>
         const COMPONENT_MAP = {
-            "Oli": { id: "oli", icon: "fi-rr-oil-can", color: "indigo" },
+            "Oli Mesin": { id: "oli-mesin", icon: "fi-rr-oil-can", color: "indigo" },
+            "Oli Gardan": { id: "oli-gardan", icon: "fi-rr-oil-can", color: "indigo" },
+            "Filter Oli": { id: "filter-oli", icon: "fi-rr-filter", color: "indigo" },
             "Accu": { id: "accu", icon: "fi-rr-car-battery", color: "emerald" },
             "Busi": { id: "busi", icon: "fi-rr-bolt", color: "yellow" },
+            "Air Radiator": { id: "air-radiator", icon: "fi-rr-dewpoint", color: "cyan" },
             "Kampas Rem Depan": { id: "rem-depan", icon: "fi-rr-brake-warning", color: "red" },
             "Kampas Rem Belakang": { id: "rem-belakang", icon: "fi-rr-brake-warning", color: "red" },
             "Ban Depan": { id: "ban-depan", icon: "fi-rr-tire", color: "slate" },
@@ -273,78 +277,79 @@
         };
 
         const DEFAULT_INTERVALS = { 
-            "Oli": 2000, "Accu": 25000, "Busi": 8000, "Kampas Rem Depan": 25000, 
+            "Oli Mesin": 2000, "Oli Gardan": 10000, "Filter Oli": 10000, "Accu": 25000, "Busi": 8000, "Air Radiator": 30000, "Kampas Rem Depan": 25000, 
             "Kampas Rem Belakang": 25000, "Ban Depan": 11000, "Ban Belakang": 11000, 
             "Rantai": 20000, "V-Belt": 20000
         };
 
-        // AMBIL DATA DARI LOCALSTORAGE
+        // VARIABEL GLOBAL
         let vehicles = JSON.parse(localStorage.getItem('motoPulseVehicles')) || [];
-        let activeVehicleId = localStorage.getItem('motoPulseActiveId');
+        let activeVehicleId = localStorage.getItem('motoPulseActiveId') || null;
 
         function init() {
-            // Jika ada kendaraan tapi tidak ada ID aktif, pilih yang pertama
             if (vehicles.length > 0 && !activeVehicleId) {
                 activeVehicleId = vehicles[0].id.toString();
-                localStorage.setItem('motoPulseActiveId', activeVehicleId);
             }
-
             renderVehicleSelector();
-            
-            if (activeVehicleId && vehicles.length > 0) {
-                showDashboard();
-            } else {
-                showNoVehicle();
-            }
-            
-            document.getElementById('serviceDate').valueAsDate = new Date();
+            refreshUI();
             renderComponentOptions();
+            document.getElementById('serviceDate').valueAsDate = new Date();
         }
 
-        function renderVehicleSelector() {
-            const selector = document.getElementById('vehicleSelector');
-            if (vehicles.length === 0) {
-                selector.innerHTML = '<option disabled selected>Tidak ada motor</option>';
-                return;
-            }
-            // Gunakan == agar string "123" cocok dengan angka 123
-            selector.innerHTML = vehicles.map(v => `
-                <option value="${v.id}" ${v.id == activeVehicleId ? 'selected' : ''}>
-                    ${v.name}
-                </option>
-            `).join('');
+        // --- FUNGSI UTAMA (SIMPAN DATA) ---
+        function saveData() {
+            localStorage.setItem('motoPulseVehicles', JSON.stringify(vehicles));
+            localStorage.setItem('motoPulseActiveId', activeVehicleId ? activeVehicleId.toString() : "");
         }
 
-        function showDashboard() {
-            // Gunakan == untuk menghindari bug tipe data ID
-            const vehicle = vehicles.find(v => v.id == activeVehicleId);
-            
-            if (!vehicle) {
-                showNoVehicle();
-                return;
+        function refreshUI() {
+            if (activeVehicleId && vehicles.length > 0) {
+                document.getElementById('noVehicleState').classList.add('hidden');
+                document.getElementById('dashboardContent').classList.remove('hidden');
+                updateDashboard();
+                renderHistory();
+            } else {
+                document.getElementById('noVehicleState').classList.remove('hidden');
+                document.getElementById('dashboardContent').classList.add('hidden');
             }
+        }
 
-            document.getElementById('noVehicleState').classList.add('hidden');
-            document.getElementById('dashboardContent').classList.remove('hidden');
+        // --- MANAJEMEN INTERVAL (INI YANG TADI BERMASALAH) ---
+        function saveIntervals() {
+            // Ambil index motor yang sedang aktif
+            const vIdx = vehicles.findIndex(v => v.id == activeVehicleId);
             
-            document.getElementById('activeVehicleName').innerText = vehicle.name;
-            document.getElementById('activeVehicleMerk').innerText = vehicle.merk;
-            
-            updateDashboard();
-            renderHistory();
+            if (vIdx !== -1) {
+                const inputs = document.querySelectorAll('#intervalForm input');
+                
+                // Pastikan objek intervals ada
+                if (!vehicles[vIdx].intervals) vehicles[vIdx].intervals = {...DEFAULT_INTERVALS};
+
+                inputs.forEach(input => {
+                    vehicles[vIdx].intervals[input.name] = parseInt(input.value) || 0;
+                });
+
+                saveData(); // Simpan ke LocalStorage
+                toggleIntervalModal(); // Tutup Modal
+                updateDashboard(); // Langsung Update Tampilan
+            }
         }
 
         function updateDashboard() {
             const vehicle = vehicles.find(v => v.id == activeVehicleId);
             if (!vehicle) return;
 
-            // Hitung Odo berdasarkan log atau KM awal
+            // Update Info Header
+            document.getElementById('activeVehicleName').innerText = vehicle.name;
+            document.getElementById('activeVehicleMerk').innerText = vehicle.merk;
+
             const currentKm = vehicle.logs.length > 0 
                 ? Math.max(...vehicle.logs.map(l => l.km), vehicle.initialKm) 
                 : vehicle.initialKm;
             
             document.getElementById('global-odo').innerHTML = `${currentKm.toLocaleString()} <span class="text-lg font-light text-slate-500 italic">KM</span>`;
 
+            // Update Cards
             const grid = document.getElementById('statusGrid');
             grid.innerHTML = '';
 
@@ -352,7 +357,9 @@
                 const logsForComp = vehicle.logs.filter(l => l.component === name && l.type === 'replacement');
                 const lastReplacementKm = logsForComp.length > 0 ? logsForComp[0].km : vehicle.initialKm;
                 
-                const interval = vehicle.intervals[name] || DEFAULT_INTERVALS[name];
+                // Ambil interval dari motor, jika tidak ada pakai default
+                const interval = (vehicle.intervals && vehicle.intervals[name]) ? vehicle.intervals[name] : DEFAULT_INTERVALS[name];
+                
                 const kmUsed = currentKm - lastReplacementKm;
                 const remainingKm = Math.max(0, interval - kmUsed);
                 const progressPerc = Math.min(100, Math.max(0, (remainingKm / interval) * 100));
@@ -368,24 +375,22 @@
                         </div>
                         <p class="text-2xl font-black mb-1">${remainingKm.toLocaleString()} <span class="text-[10px] font-normal text-slate-500 uppercase">KM Sisa</span></p>
                         <div class="progress-container mt-4 mb-2">
-                            <div class="progress-bar bg-${colorClass}-500" style="width: ${progressPerc}%"></div>
+                            <div class="progress-bar bg-${colorClass}-500 shadow-[0_0_10px_rgba(255,255,255,0.2)]" style="width: ${progressPerc}%"></div>
                         </div>
                         <div class="text-[9px] font-bold text-slate-500 uppercase">
                             ${isWarning ? `<span class="text-red-500 animate-pulse">Waktunya Ganti!</span>` : `Kondisi ${Math.round(progressPerc)}%`}
                         </div>
-                    </div>
-                `;
+                    </div>`;
             }
         }
 
-        // FUNGSI GANTI MOTOR
+        // --- MANAJEMEN KENDARAAN ---
         function switchVehicle(id) {
             activeVehicleId = id.toString();
-            localStorage.setItem('motoPulseActiveId', activeVehicleId);
-            showDashboard();
+            saveData();
+            refreshUI();
         }
 
-        // SIMPAN DATA KENDARAAN BARU
         document.getElementById('vehicleForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const newId = Date.now().toString();
@@ -402,14 +407,24 @@
             saveData();
             toggleVehicleModal();
             renderVehicleSelector();
-            showDashboard();
+            refreshUI();
             this.reset();
         });
 
-        // SIMPAN DATA SERVIS
+        function deleteActiveVehicle() {
+            if(confirm('Hapus seluruh data kendaraan ini?')) {
+                vehicles = vehicles.filter(v => v.id != activeVehicleId);
+                activeVehicleId = vehicles.length > 0 ? vehicles[0].id.toString() : null;
+                saveData();
+                renderVehicleSelector();
+                refreshUI();
+            }
+        }
+
+        // --- MANAJEMEN LOG SERVIS ---
         document.getElementById('serviceForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const vehicle = vehicles.find(v => v.id == activeVehicleId);
+            const vIdx = vehicles.findIndex(v => v.id == activeVehicleId);
             const action = document.getElementById('actionType').value;
             
             const newLog = {
@@ -420,52 +435,33 @@
                 component: action === 'replacement' ? document.getElementById('componentType').value : null
             };
 
-            vehicle.logs.unshift(newLog);
-            saveAndRefresh();
+            vehicles[vIdx].logs.unshift(newLog);
+            saveData();
+            refreshUI();
             this.reset();
             document.getElementById('serviceDate').valueAsDate = new Date();
             document.getElementById('componentWrapper').classList.add('hidden');
         });
 
-        function deleteActiveVehicle() {
-            if(confirm('Hapus seluruh data kendaraan ini?')) {
-                vehicles = vehicles.filter(v => v.id != activeVehicleId);
-                activeVehicleId = vehicles.length > 0 ? vehicles[0].id.toString() : null;
-                saveAndRefresh();
-                renderVehicleSelector();
-                if (!activeVehicleId) showNoVehicle();
-            }
-        }
-
         function deleteLog(id) {
             if(confirm('Hapus log ini?')) {
-                const vehicle = vehicles.find(v => v.id == activeVehicleId);
-                vehicle.logs = vehicle.logs.filter(l => l.id !== id);
-                saveAndRefresh();
+                const vIdx = vehicles.findIndex(v => v.id == activeVehicleId);
+                vehicles[vIdx].logs = vehicles[vIdx].logs.filter(l => l.id !== id);
+                saveData();
+                refreshUI();
             }
         }
 
-        function saveIntervals() {
-            const vehicle = vehicles.find(v => v.id == activeVehicleId);
-            const inputs = document.querySelectorAll('#intervalForm input');
-            inputs.forEach(input => {
-                vehicle.intervals[input.name] = parseInt(input.value);
-            });
-            saveAndRefresh();
-            toggleIntervalModal();
+        // --- UI UTILITY ---
+        function renderVehicleSelector() {
+            const selector = document.getElementById('vehicleSelector');
+            if (vehicles.length === 0) {
+                selector.innerHTML = '<option disabled selected>Tidak ada motor</option>';
+                return;
+            }
+            selector.innerHTML = vehicles.map(v => `<option value="${v.id}" ${v.id == activeVehicleId ? 'selected' : ''}>${v.name}</option>`).join('');
         }
 
-        function saveData() {
-            localStorage.setItem('motoPulseVehicles', JSON.stringify(vehicles));
-            localStorage.setItem('motoPulseActiveId', activeVehicleId ? activeVehicleId.toString() : "");
-        }
-
-        function saveAndRefresh() {
-            saveData();
-            showDashboard();
-        }
-
-        // MODAL & UI LAINNYA
         function renderHistory() {
             const vehicle = vehicles.find(v => v.id == activeVehicleId);
             const tbody = document.getElementById('historyTable');
@@ -484,11 +480,6 @@
             select.innerHTML = Object.keys(COMPONENT_MAP).map(key => `<option value="${key}">${key}</option>`).join('');
         }
 
-        function showNoVehicle() {
-            document.getElementById('noVehicleState').classList.remove('hidden');
-            document.getElementById('dashboardContent').classList.add('hidden');
-        }
-
         function toggleVehicleModal() {
             const m = document.getElementById('vehicleModal');
             m.classList.toggle('opacity-0');
@@ -500,7 +491,9 @@
             const vehicle = vehicles.find(v => v.id == activeVehicleId);
             const container = document.getElementById('intervalForm');
             if (m.classList.contains('opacity-0') && vehicle) {
-                container.innerHTML = Object.entries(vehicle.intervals).map(([key, val]) => `<div><label class="text-[9px] text-slate-500 uppercase font-bold">${key}</label><input type="number" name="${key}" value="${val}" class="w-full bg-slate-800 p-2 rounded-lg text-sm border border-slate-700 outline-none"></div>`).join('');
+                // Gunakan interval dari motor, kalau gak ada pakai default
+                const currentInt = vehicle.intervals || DEFAULT_INTERVALS;
+                container.innerHTML = Object.keys(DEFAULT_INTERVALS).map(key => `<div><label class="text-[9px] text-slate-500 uppercase font-bold">${key}</label><input type="number" name="${key}" value="${currentInt[key] || DEFAULT_INTERVALS[key]}" class="w-full bg-slate-800 p-2 rounded-lg text-sm border border-slate-700 outline-none"></div>`).join('');
             }
             m.classList.toggle('opacity-0');
             m.classList.toggle('pointer-events-none');
