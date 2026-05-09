@@ -3,179 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PaddockCheck Multi-Track</title>
+    <title>MotoPulse Ultimate - Precision Tracker</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏍️</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-brands/css/uicons-brands.css'>
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
-    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-regular-straight/css/uicons-regular-straight.css'>
-    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
-    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-bold-straight/css/uicons-bold-straight.css'>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
         
         :root {
-            --neon-indigo: #6366f1;
-            --neon-glow: 0 0 15px rgba(99, 102, 241, 0.4);
+            --neon-color: #22d3ee;
+            --neon-glow: rgba(34, 211, 238, 0.3);
         }
 
         body { 
             font-family: 'Inter', sans-serif; 
             background-color: #0f172a;
             color: #f1f5f9;
+            transition: all 0.5s ease;
         }
 
-        .neon-border {
-            border: 1px solid rgba(99, 102, 241, 0.3);
-            box-shadow: var(--neon-glow);
-        }
+        /* Skema Warna Berdasarkan Jenis */
+        .theme-matic-radiator { --neon-color: #22d3ee; --neon-glow: rgba(34, 211, 238, 0.4); } /* Biru */
+        .theme-manual-radiator { --neon-color: #10b981; --neon-glow: rgba(16, 185, 129, 0.4); } /* Hijau */
+        .theme-aircooled { --neon-color: #f59e0b; --neon-glow: rgba(245, 158, 11, 0.4); } /* Oranye */
 
-        .card-dark {
-            background: rgba(30, 41, 59, 0.7);
+        .neon-text { color: var(--neon-color); }
+        .neon-bg { background-color: var(--neon-color); }
+        .neon-border { border-color: var(--neon-color); }
+        .neon-shadow { box-shadow: 0 0 15px var(--neon-glow); }
+
+        .card-ultimate {
+            background: rgba(30, 41, 59, 0.5);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
         }
 
-        .progress-container {
-            height: 6px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            overflow: hidden;
+        .card-ultimate:hover {
+            border-color: var(--neon-color);
+            box-shadow: 0 0 20px var(--neon-glow);
+            transform: translateY(-2px);
         }
 
-        .progress-bar {
-            height: 100%;
-            transition: width 0.5s ease-in-out;
+        .progress-container { background: rgba(255, 255, 255, 0.05); height: 6px; border-radius: 10px; overflow: hidden; }
+        .progress-bar { height: 100%; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        input, select { 
+            background: #1e293b !important; 
+            border: 1px solid #334155 !important; 
+            color: white !important; 
         }
 
-        /* Custom scrollbar for dark mode */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #1e293b; }
-        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
-
-        .modal { transition: opacity 0.25s ease; }
-        body.modal-active { overflow: hidden; }
+        .modal-overlay { backdrop-filter: blur(8px); background: rgba(0,0,0,0.8); }
+        
+        /* Animasi Transisi Halaman */
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body class="min-h-screen">
+<body class="min-h-screen theme-matic-radiator">
 
-    <!-- Header -->
-    <header class="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40 p-4">
-        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-            <h1 class="text-2xl font-bold flex items-center text-indigo-400">
-                <i class="fi fi-rr-motorcycle mr-3 text-3xl animate-pulse"></i> PaddockCheck <span class="text-white ml-2 text-sm font-light tracking-widest uppercase">Multi-Track</span>
-            </h1>
-            
-            <div class="flex items-center gap-4 w-full md:w-auto">
-                <!-- Vehicle Selector -->
-                <div class="relative flex-grow md:flex-grow-0">
-                    <select id="vehicleSelector" onchange="switchVehicle(this.value)" class="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-2 outline-none focus:ring-2 focus:ring-indigo-500 appearance-none">
-                        <!-- Kendaraan akan muncul di sini -->
-                    </select>
+    <!-- Header Navigation -->
+    <header class="border-b border-white/5 bg-slate-900/50 sticky top-0 z-40 backdrop-blur-md">
+        <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 neon-bg rounded-2xl flex items-center justify-center shadow-lg neon-shadow transition-all duration-500">
+                    <i class="fi fi-rr-motorcycle text-slate-900 text-2xl font-bold"></i>
                 </div>
-                
-                <button onclick="toggleVehicleModal()" class="bg-indigo-600 hover:bg-indigo-500 p-2 px-4 rounded-xl transition flex items-center gap-2 whitespace-nowrap">
-                    <i class="fi fi-rr-plus-small"></i> <span class="hidden md:inline">Tambah Motor</span>
+                <div>
+                    <h1 class="text-2xl font-black tracking-tighter uppercase italic leading-none">MotoPulse <span class="neon-text">Ultimate</span></h1>
+                    <p class="text-[10px] text-slate-500 font-bold tracking-[0.3em] uppercase">Advanced Maintenance Hub</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 w-full md:w-auto">
+                <select id="vehicleSelector" onchange="switchVehicle(this.value)" class="flex-grow md:w-64 px-4 py-2.5 rounded-xl outline-none focus:ring-2 focus:ring-cyan-500 transition-all">
+                    <!-- Vehicles load via JS -->
+                </select>
+                <button onclick="toggleModal('addVehicleModal')" class="bg-white text-slate-900 px-5 py-2.5 rounded-xl font-bold transition flex items-center gap-2 hover:bg-slate-200 active:scale-95">
+                    <i class="fi fi-rr-plus-small"></i> <span>Daftar Motor</span>
                 </button>
             </div>
         </div>
     </header>
 
-    <main class="container mx-auto px-4 py-8">
+    <main class="container mx-auto px-4 py-10">
         
-        <!-- Welcome State (If No Vehicle) -->
-        <div id="noVehicleState" class="hidden text-center py-20">
-            <i class="fi fi-rr-box-open text-6xl text-slate-700 mb-4 block"></i>
-            <h2 class="text-2xl font-bold text-slate-400">Belum ada motor terdaftar</h2>
-            <p class="text-slate-500 mb-6">Tambahkan motor pertama Anda untuk mulai melacak perawatan.</p>
+        <!-- Welcome State -->
+        <div id="emptyState" class="hidden text-center py-20 fade-in">
+            <div class="inline-block p-10 bg-slate-900/50 rounded-full mb-6 border border-white/5">
+                <i class="fi fi-rr-motorcycle text-6xl text-slate-700"></i>
+            </div>
+            <h2 class="text-3xl font-bold text-slate-400">Belum Ada Kendaraan</h2>
+            <p class="text-slate-500 mt-2 mb-10 max-w-md mx-auto">Pantau kesehatan motor Anda secara presisi berdasarkan spesifikasi teknis transmisi dan sistem pendingin.</p>
+            <button onclick="toggleModal('addVehicleModal')" class="neon-bg text-slate-900 px-10 py-4 rounded-2xl font-black shadow-xl neon-shadow hover:scale-105 transition">MULAI SEKARANG</button>
         </div>
 
         <!-- Dashboard Content -->
-        <div id="dashboardContent" class="hidden">
-            <!-- Global Info -->
-            <div class="flex justify-between items-end mb-8">
+        <div id="mainDashboard" class="hidden fade-in">
+            <!-- Info Utama -->
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
                 <div>
-                    <h2 id="activeVehicleName" class="text-3xl font-bold">Nama Motor</h2>
-                    <p id="activeVehicleMerk" class="text-slate-400">Merk Motor</p>
+                    <h2 id="displayName" class="text-5xl font-black text-white mb-2 tracking-tighter">Vario 160</h2>
+                    <div class="flex flex-wrap gap-2">
+                        <span id="tagTrans" class="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest neon-bg text-slate-900 neon-shadow">MATIC</span>
+                        <span id="tagCool" class="px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-slate-800 text-slate-400 border border-white/10">RADIATOR</span>
+                    </div>
                 </div>
                 <div class="text-right">
-                    <p class="text-[10px] text-indigo-400 uppercase tracking-[0.2em] font-bold">Odometer Saat Ini</p>
-                    <p class="text-4xl font-black text-white" id="global-odo">0 <span class="text-lg font-light text-slate-500 italic">KM</span></p>
+                    <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mb-1">Odometer Terkini</p>
+                    <p class="text-6xl font-black neon-text tracking-tighter transition-all" id="displayOdo">0 <span class="text-xl text-slate-700 font-light italic">KM</span></p>
                 </div>
             </div>
 
-            <!-- Dashboard Status Grid -->
-            <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-10" id="statusGrid">
-                <!-- Cards will be generated by JS -->
+            <!-- Grid Komponen Pintar -->
+            <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mb-16" id="componentGrid">
+                <!-- Cards generated dynamically -->
             </section>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Form Input -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                <!-- Form Log -->
                 <div class="lg:col-span-1">
-                    <div class="card-dark p-6 rounded-3xl shadow-xl">
-                        <h2 class="text-xl font-bold mb-6 flex items-center gap-2 text-indigo-400">
-                            <i class="fi fi-rr-edit"></i> Log Aktivitas
-                        </h2>
-                        <form id="serviceForm" class="space-y-4">
+                    <div class="card-ultimate p-8 rounded-[2rem] border-white/5 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-4 opacity-10">
+                            <i class="fi fi-rr-wrench-simple text-6xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-8 flex items-center gap-3">
+                            <i class="fi fi-rr-edit neon-text"></i> Catat Servis
+                        </h3>
+                        <form id="serviceForm" class="space-y-5">
                             <div>
-                                <label class="block text-xs font-bold mb-2 text-slate-400 uppercase">Odometer Terbaru (KM)</label>
-                                <input type="number" id="currentKm" required class="w-full p-3 bg-slate-800 border border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-white" placeholder="Contoh: 21500">
+                                <label class="text-[10px] font-black text-slate-500 uppercase ml-1">Odometer Saat Ini</label>
+                                <input type="number" id="inputKm" required class="w-full p-4 rounded-2xl outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-cyan-500" placeholder="Contoh: 15400">
                             </div>
-
                             <div>
-                                <label class="block text-xs font-bold mb-2 text-slate-400 uppercase">Tipe Catatan</label>
-                                <select id="actionType" class="w-full p-3 bg-slate-800 border border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-white">
-                                    <option value="update">Hanya Update Odometer</option>
-                                    <option value="replacement">Ganti Komponen (Reset)</option>
+                                <label class="text-[10px] font-black text-slate-500 uppercase ml-1">Jenis Aktivitas</label>
+                                <select id="actionType" class="w-full p-4 rounded-2xl outline-none" onchange="toggleComponentSelect()">
+                                    <option value="update">Hanya Update KM</option>
+                                    <option value="replacement">Ganti Komponen</option>
                                 </select>
                             </div>
-
-                            <div id="componentWrapper" class="hidden">
-                                <label class="block text-xs font-bold mb-2 text-slate-400 uppercase">Pilih Komponen</label>
-                                <select id="componentType" class="w-full p-3 bg-slate-800 border border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-white">
-                                    <!-- Options generated based on COMPONENT_MAP -->
+                            <div id="compSelectWrapper" class="hidden">
+                                <label class="text-[10px] font-black text-slate-500 uppercase ml-1">Pilih Komponen</label>
+                                <select id="inputComponent" class="w-full p-4 rounded-2xl outline-none">
+                                    <!-- Options based on vehicle logic -->
                                 </select>
                             </div>
-
                             <div>
-                                <label class="block text-xs font-bold mb-2 text-slate-400 uppercase">Tanggal</label>
-                                <input type="date" id="serviceDate" required class="w-full p-3 bg-slate-800 border border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-white">
+                                <label class="text-[10px] font-black text-slate-500 uppercase ml-1">Tanggal</label>
+                                <input type="date" id="inputDate" required class="w-full p-4 rounded-2xl outline-none">
                             </div>
-
-                            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-4 rounded-2xl transition-all shadow-lg hover:shadow-indigo-500/20 active:scale-95">
-                                Simpan Data
-                            </button>
+                            <button type="submit" class="w-full neon-bg text-slate-900 py-5 rounded-2xl font-black uppercase tracking-widest mt-4 shadow-lg neon-shadow active:scale-95 transition">SIMPAN AKTIVITAS</button>
                         </form>
                     </div>
-                    
-                    <button onclick="deleteActiveVehicle()" class="w-full mt-6 text-slate-600 hover:text-red-400 text-xs font-bold uppercase transition">
-                        Hapus Kendaraan Ini
-                    </button>
+
+                    <button onclick="deleteVehicle()" class="w-full mt-8 text-slate-600 hover:text-red-500 text-[10px] font-black uppercase transition tracking-[0.3em]">Hapus Kendaraan</button>
                 </div>
 
-                <!-- Log Riwayat -->
+                <!-- Tabel Riwayat -->
                 <div class="lg:col-span-2">
-                    <div class="card-dark rounded-3xl overflow-hidden shadow-xl">
-                        <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
-                            <h2 class="text-xl font-bold text-white">Riwayat Servis</h2>
-                            <button onclick="toggleIntervalModal()" class="text-indigo-400 text-xs font-bold uppercase hover:underline">Setel Interval</button>
+                    <div class="card-ultimate rounded-[2rem] overflow-hidden">
+                        <div class="p-8 border-b border-white/5 flex justify-between items-center bg-white/5">
+                            <h3 class="font-black uppercase text-xs tracking-[0.2em]">Logbook Digital</h3>
+                            <button onclick="toggleModal('intervalModal')" class="text-[10px] font-black neon-text hover:underline transition-all">SETEL INTERVAL</button>
                         </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left">
-                                <thead class="bg-slate-900/80">
+                                <thead class="bg-slate-900/80 text-[10px] uppercase font-black text-slate-500">
                                     <tr>
-                                        <th class="p-4 text-[10px] font-bold text-slate-500 uppercase">Tanggal</th>
-                                        <th class="p-4 text-[10px] font-bold text-slate-500 uppercase">Odometer</th>
-                                        <th class="p-4 text-[10px] font-bold text-slate-500 uppercase">Aktivitas</th>
-                                        <th class="p-4 text-[10px] font-bold text-slate-500 uppercase text-center">Aksi</th>
+                                        <th class="p-6">Tanggal</th>
+                                        <th class="p-6">Odo</th>
+                                        <th class="p-6">Keterangan</th>
+                                        <th class="p-6 text-center">Aksi</th>
                                     </tr>
                                 </thead>
-                                <tbody id="historyTable" class="divide-y divide-slate-800 text-sm"></tbody>
+                                <tbody id="logBody" class="text-sm divide-y divide-white/5">
+                                    <!-- Logs -->
+                                </tbody>
                             </table>
-                        </div>
-                        <div id="emptyState" class="p-20 text-center text-slate-600 hidden">
-                            <i class="fi fi-rr-database text-4xl mb-4 block"></i>
-                            <p>Belum ada riwayat aktivitas.</p>
                         </div>
                     </div>
                 </div>
@@ -184,326 +190,322 @@
     </main>
 
     <!-- Modal Tambah Motor -->
-    <div id="vehicleModal" class="modal opacity-0 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center z-50">
-        <div class="absolute w-full h-full bg-slate-950 opacity-90 backdrop-blur-sm"></div>
-        <div class="card-dark w-11/12 md:max-w-md mx-auto rounded-3xl shadow-2xl z-50 overflow-y-auto">
-            <div class="p-8">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-2xl font-bold text-white">Tambah Motor Baru</h3>
-                    <button onclick="toggleVehicleModal()" class="text-slate-400 hover:text-white"><i class="fi fi-rr-cross-small"></i></button>
+    <div id="addVehicleModal" class="fixed inset-0 z-50 modal-overlay hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 w-full max-w-lg rounded-[2.5rem] p-10 border border-white/10 shadow-2xl">
+            <h2 class="text-3xl font-black mb-8 tracking-tighter">Registrasi Motor</h2>
+            <form id="vehicleForm" class="space-y-6">
+                <div>
+                    <label class="text-[10px] font-black text-slate-500 uppercase ml-1">Nama Motor</label>
+                    <input type="text" id="vName" placeholder="Contoh: Honda PCX 160" required class="w-full p-4 rounded-2xl outline-none">
                 </div>
-                <form id="vehicleForm" class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-bold mb-2 text-slate-400 uppercase tracking-widest">Nama Motor</label>
-                        <input type="text" id="vName" required class="w-full p-3 bg-slate-800 border border-slate-700 rounded-xl text-white outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Contoh: Vario 160">
+                        <label class="text-[10px] font-black text-slate-500 uppercase ml-1">Odometer Awal</label>
+                        <input type="number" id="vKm" placeholder="0" required class="w-full p-4 rounded-2xl outline-none">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold mb-2 text-slate-400 uppercase tracking-widest">Merk</label>
-                        <input type="text" id="vMerk" required class="w-full p-3 bg-slate-800 border border-slate-700 rounded-xl text-white outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Contoh: Honda">
+                        <label class="text-[10px] font-black text-slate-500 uppercase ml-1">Transmisi</label>
+                        <select id="vTrans" class="w-full p-4 rounded-2xl outline-none">
+                            <option value="matic">MATIC</option>
+                            <option value="manual">MANUAL</option>
+                        </select>
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold mb-2 text-slate-400 uppercase tracking-widest">Odometer Awal (KM)</label>
-                        <input type="number" id="vKm" required class="w-full p-3 bg-slate-800 border border-slate-700 rounded-xl text-white outline-none focus:ring-2 focus:ring-indigo-500" placeholder="0">
-                    </div>
-                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-4 rounded-2xl transition shadow-lg mt-4">Daftarkan Kendaraan</button>
-                </form>
+                </div>
+                <div>
+                    <label class="text-[10px] font-black text-slate-500 uppercase ml-1">Sistem Pendingin</label>
+                    <select id="vCool" class="w-full p-4 rounded-2xl outline-none">
+                        <option value="radiator">RADIATOR (Pendingin Cairan)</option>
+                        <option value="air">AIR COOLED (Pendingin Udara)</option>
+                    </select>
+                </div>
+                <div class="flex gap-4 pt-6">
+                    <button type="button" onclick="toggleModal('addVehicleModal')" class="flex-1 bg-slate-800 py-5 rounded-2xl font-bold text-slate-400">BATAL</button>
+                    <button type="submit" class="flex-1 neon-bg text-slate-900 py-5 rounded-2xl font-black neon-shadow">DAFTARKAN</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Interval -->
+    <div id="intervalModal" class="fixed inset-0 z-50 modal-overlay hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 w-full max-w-2xl rounded-[2.5rem] p-10 border border-white/10 shadow-2xl">
+            <h2 class="text-xl font-black mb-8 neon-text uppercase tracking-[0.2em]">Maintenance Intervals (KM)</h2>
+            <form id="intervalForm" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <!-- Generated JS -->
+            </form>
+            <div class="flex gap-4 mt-10">
+                <button onclick="toggleModal('intervalModal')" class="flex-1 bg-slate-800 py-5 rounded-2xl font-bold">TUTUP</button>
+                <button onclick="saveIntervals()" class="flex-1 neon-bg text-slate-900 py-5 rounded-2xl font-black neon-shadow">TERAPKAN</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal Interval (Per Motor) -->
-    <div id="intervalModal" class="modal opacity-0 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center z-50">
-        <div class="absolute w-full h-full bg-slate-950 opacity-90"></div>
-        <div class="card-dark w-11/12 md:max-w-md mx-auto rounded-3xl shadow-2xl z-50 p-8">
-            <h3 class="text-xl font-bold mb-6 text-indigo-400">Setel Interval KM</h3>
-            <form id="intervalForm" class="grid grid-cols-2 gap-4" id="intervalInputs">
-                <!-- Generated by JS -->
-            </form>
-            <button onclick="saveIntervals()" class="w-full bg-indigo-600 py-3 rounded-xl mt-6 font-bold">Simpan Perubahan</button>
-            <button onclick="toggleIntervalModal()" class="w-full mt-2 text-slate-500 text-sm">Batal</button>
-        </div>
-    </div>
-
-    <!-- Footer Style Instagram/Social Media -->
-    <footer class="mt-20 pb-12 border-t border-slate-800 pt-12">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-8">
-                
-                <!-- Sisi Kiri: Branding & Copyright -->
-                <div class="text-center md:text-left">
-                    <div class="flex items-center justify-center md:justify-start gap-2 mb-2">
-                        <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(99,102,241,0.4)]">
-                            <i class="fi fi-rr-motorcycle text-white text-sm"></i>
-                        </div>
-                        <span class="text-xl font-black tracking-tighter text-white">PaddockCheck</span>
-                    </div>
-                    <p class="text-slate-500 text-[10px] uppercase tracking-[0.2em]">Sistem Pelacak Perawatan Digital</p>
+    <!-- Footer -->
+    <footer class="mt-20 pb-12 border-t border-white/5 pt-12">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="text-center md:text-left">
+                <p class="text-white font-black tracking-tighter text-xl uppercase">MotoPulse <span class="neon-text">Ultimate</span></p>
+                <p class="text-slate-600 text-[10px] font-bold uppercase tracking-[0.3em]">Smart Maintenance Ecosystem</p>
+            </div>
+            <div class="flex items-center gap-6">
+                <a href="https://www.instagram.com/vale.kz_/" target="_blank" class="w-12 h-12 rounded-2xl bg-slate-900 flex items-center justify-center border border-white/5 hover:border-amber-500 transition-all group">
+                    <i class="fi fi-brands-instagram text-slate-500 group-hover:text-amber-500 text-xl"></i>
+                </a>
+                <div class="text-right">
+                    <p class="text-slate-500 text-[10px] font-bold uppercase">Developed by</p>
+                    <p class="text-white font-black text-sm uppercase">ValeKZ <span class="neon-text">Digital</span></p>
                 </div>
-
-                <!-- Sisi Tengah: Credit dengan Animasi Heart -->
-                <div class="flex flex-col items-center">
-                    <p class="text-slate-400 text-sm flex items-center gap-2 bg-slate-800/50 px-4 py-2 rounded-full border border-slate-700">
-                        Made with <i class="fi fi-rs-wisdom text-red-500 animate-pulse text-xs"></i> by <span class="font-bold text-indigo-400">ValeKZ</span>
-                    </p>
-                </div>
-
-                <!-- Sisi Kanan: Tombol Sosial Media Berwarna Neon -->
-                <div class="flex items-center gap-4">
-                    <!-- Website Link -->
-                    <a href="https://porto-vale.vercel.app/" target="_blank" 
-                       class="w-12 h-12 flex items-center justify-center rounded-2xl bg-slate-800 border border-slate-700 text-slate-400 hover:text-indigo-400 hover:border-indigo-400 hover:shadow-[0_0_15px_rgba(99,102,241,0.3)] transition-all duration-300 group">
-                        <i class="fi fi-rr-globe text-xl group-hover:scale-110 transition-transform"></i>
-                    </a>
-                </div>
-
             </div>
         </div>
     </footer>
 
     <script>
-        const COMPONENT_MAP = {
-            "Oli Mesin": { id: "oli-mesin", icon: "fi-rr-oil-can", color: "indigo" },
-            "Oli Gardan": { id: "oli-gardan", icon: "fi-rr-oil-can", color: "indigo" },
-            "Filter Oli": { id: "filter-oli", icon: "fi-rr-filter", color: "indigo" },
-            "Accu": { id: "accu", icon: "fi-rr-car-battery", color: "emerald" },
-            "Busi": { id: "busi", icon: "fi-rr-bolt", color: "yellow" },
-            "Air Radiator": { id: "air-radiator", icon: "fi-rr-dewpoint", color: "cyan" },
-            "Kampas Rem Depan": { id: "rem-depan", icon: "fi-rr-brake-warning", color: "red" },
-            "Kampas Rem Belakang": { id: "rem-belakang", icon: "fi-rr-brake-warning", color: "red" },
-            "Ban Depan": { id: "ban-depan", icon: "fi-rr-tire", color: "slate" },
-            "Ban Belakang": { id: "ban-belakang", icon: "fi-rr-tire", color: "slate" },
-            "Rantai": { id: "rantai", icon: "fi-rr-link", color: "orange" },
-            "V-Belt": { id: "v-belt", icon: "fi-br-conveyor-belt-empty", color: "orange" }
+        // Logika Bisnis Komponen
+        const MASTER_COMPONENTS = {
+            shared: {
+                "Oli Mesin": { icon: "fi-rr-oil-can", default: 2000 },
+                "Busi": { icon: "fi-rr-bolt", default: 8000 },
+                "Kampas Rem Depan": { icon: "fi-rr-brake-warning", default: 15000 },
+                "Kampas Rem Belakang": { icon: "fi-rr-brake-warning", default: 15000 },
+                "Ban Depan": { icon: "fi-rr-tire", default: 20000 },
+                "Ban Belakang": { icon: "fi-rr-tire", default: 20000 },
+                
+                "Filter Udara": { icon: "fi-rr-wind", default: 5000 } // Sekarang ada di shared
+            },
+            matic: {
+                "Oli Gardan": { icon: "fi-rr-settings", default: 8000 },
+                "V-Belt": { icon: "fi-rr-label", default: 20000 }
+            },
+            manual: {
+                "Rantai": { icon: "fi-rr-link", default: 25000 },
+                "Kampas Kopling": { icon: "fi-rr-layers", default: 30000 }
+            },
+            radiator: {
+                "Air Radiator": { icon: "fi-bs-dewpoint", default: 10000 }
+            },
+            air: {
+                // Kosong karena Filter Udara sudah dipindah ke shared
+            }
         };
 
-        const DEFAULT_INTERVALS = { 
-            "Oli Mesin": 2000, "Oli Gardan": 10000, "Filter Oli": 10000, "Accu": 25000, "Busi": 8000, "Air Radiator": 30000, "Kampas Rem Depan": 25000, 
-            "Kampas Rem Belakang": 25000, "Ban Depan": 11000, "Ban Belakang": 11000, 
-            "Rantai": 20000, "V-Belt": 20000
-        };
-
-        // VARIABEL GLOBAL
-        let vehicles = JSON.parse(localStorage.getItem('motoPulseVehicles')) || [];
-        let activeVehicleId = localStorage.getItem('motoPulseActiveId') || null;
+        let vehicles = JSON.parse(localStorage.getItem('motoPulseUltimate_Data')) || [];
+        let activeId = localStorage.getItem('motoPulseUltimate_ActiveId');
 
         function init() {
-            if (vehicles.length > 0 && !activeVehicleId) {
-                activeVehicleId = vehicles[0].id.toString();
-            }
+            if (vehicles.length > 0 && !activeId) activeId = vehicles[0].id;
             renderVehicleSelector();
             refreshUI();
-            renderComponentOptions();
-            document.getElementById('serviceDate').valueAsDate = new Date();
-        }
-
-        // --- FUNGSI UTAMA (SIMPAN DATA) ---
-        function saveData() {
-            localStorage.setItem('motoPulseVehicles', JSON.stringify(vehicles));
-            localStorage.setItem('motoPulseActiveId', activeVehicleId ? activeVehicleId.toString() : "");
+            document.getElementById('inputDate').valueAsDate = new Date();
         }
 
         function refreshUI() {
-            if (activeVehicleId && vehicles.length > 0) {
-                document.getElementById('noVehicleState').classList.add('hidden');
-                document.getElementById('dashboardContent').classList.remove('hidden');
-                updateDashboard();
-                renderHistory();
+            const vehicle = vehicles.find(v => v.id == activeId);
+            if (!vehicle) {
+                document.getElementById('mainDashboard').classList.add('hidden');
+                document.getElementById('emptyState').classList.remove('hidden');
+                document.body.className = "min-h-screen theme-matic-radiator";
+                return;
+            }
+
+            document.getElementById('emptyState').classList.add('hidden');
+            document.getElementById('mainDashboard').classList.remove('hidden');
+
+            // Apply Theme Class
+            if (vehicle.cooling === 'air') {
+                document.body.className = "min-h-screen theme-aircooled";
             } else {
-                document.getElementById('noVehicleState').classList.remove('hidden');
-                document.getElementById('dashboardContent').classList.add('hidden');
+                document.body.className = vehicle.trans === 'matic' ? "theme-matic-radiator" : "theme-manual-radiator";
             }
+
+            document.getElementById('displayName').innerText = vehicle.name;
+            document.getElementById('tagTrans').innerText = vehicle.trans;
+            document.getElementById('tagCool').innerText = vehicle.cooling === 'radiator' ? 'Radiator' : 'Air Cooled';
+            
+            const curKm = getLatestKm(vehicle);
+            document.getElementById('displayOdo').innerHTML = `${curKm.toLocaleString()} <span class="text-xl text-slate-700 font-light italic">KM</span>`;
+
+            renderCards(vehicle, curKm);
+            renderLogs(vehicle);
+            populateComponentDropdown(vehicle);
         }
 
-        // --- MANAJEMEN INTERVAL (INI YANG TADI BERMASALAH) ---
-        function saveIntervals() {
-            // Ambil index motor yang sedang aktif
-            const vIdx = vehicles.findIndex(v => v.id == activeVehicleId);
-            
-            if (vIdx !== -1) {
-                const inputs = document.querySelectorAll('#intervalForm input');
-                
-                // Pastikan objek intervals ada
-                if (!vehicles[vIdx].intervals) vehicles[vIdx].intervals = {...DEFAULT_INTERVALS};
-
-                inputs.forEach(input => {
-                    vehicles[vIdx].intervals[input.name] = parseInt(input.value) || 0;
-                });
-
-                saveData(); // Simpan ke LocalStorage
-                toggleIntervalModal(); // Tutup Modal
-                updateDashboard(); // Langsung Update Tampilan
-            }
+        function getLatestKm(v) {
+            if (v.logs.length === 0) return v.initialKm;
+            return Math.max(...v.logs.map(l => l.km), v.initialKm);
         }
 
-        function updateDashboard() {
-            const vehicle = vehicles.find(v => v.id == activeVehicleId);
-            if (!vehicle) return;
-
-            // Update Info Header
-            document.getElementById('activeVehicleName').innerText = vehicle.name;
-            document.getElementById('activeVehicleMerk').innerText = vehicle.merk;
-
-            const currentKm = vehicle.logs.length > 0 
-                ? Math.max(...vehicle.logs.map(l => l.km), vehicle.initialKm) 
-                : vehicle.initialKm;
-            
-            document.getElementById('global-odo').innerHTML = `${currentKm.toLocaleString()} <span class="text-lg font-light text-slate-500 italic">KM</span>`;
-
-            // Update Cards
-            const grid = document.getElementById('statusGrid');
+        function renderCards(v, curKm) {
+            const grid = document.getElementById('componentGrid');
             grid.innerHTML = '';
-
-            for (const [name, config] of Object.entries(COMPONENT_MAP)) {
-                const logsForComp = vehicle.logs.filter(l => l.component === name && l.type === 'replacement');
-                const lastReplacementKm = logsForComp.length > 0 ? logsForComp[0].km : vehicle.initialKm;
+            
+            const comps = getVisibleComponents(v);
+            
+            for (const [name, config] of Object.entries(comps)) {
+                const logs = v.logs.filter(l => l.component === name && l.type === 'replacement');
+                const lastReplacementKm = logs.length > 0 ? logs[0].km : v.initialKm;
+                const interval = (v.intervals && v.intervals[name]) ? v.intervals[name] : config.default;
                 
-                // Ambil interval dari motor, jika tidak ada pakai default
-                const interval = (vehicle.intervals && vehicle.intervals[name]) ? vehicle.intervals[name] : DEFAULT_INTERVALS[name];
+                const used = curKm - lastReplacementKm;
+                const remaining = Math.max(0, interval - used);
+                const perc = Math.min(100, Math.max(0, (remaining / interval) * 100));
                 
-                const kmUsed = currentKm - lastReplacementKm;
-                const remainingKm = Math.max(0, interval - kmUsed);
-                const progressPerc = Math.min(100, Math.max(0, (remainingKm / interval) * 100));
-                
-                const isWarning = remainingKm <= 0;
-                const colorClass = isWarning ? 'red' : config.color;
+                const isCritical = remaining <= 0;
 
                 grid.innerHTML += `
-                    <div class="card-dark p-5 rounded-3xl border-t-4 border-${colorClass}-500 shadow-lg ${isWarning ? 'neon-border' : ''}">
-                        <div class="flex justify-between items-center mb-3">
-                            <h3 class="font-bold text-slate-400 text-[10px] uppercase tracking-wider">${name}</h3>
-                            <i class="fi ${config.icon} text-lg text-${colorClass}-400"></i>
+                    <div class="card-ultimate p-6 rounded-[1.8rem] border-t-4 ${isCritical ? 'neon-border neon-shadow' : 'border-transparent'}">
+                        <div class="flex justify-between items-center mb-5">
+                            <span class="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">${name}</span>
+                            <i class="fi ${config.icon} neon-text text-xl"></i>
                         </div>
-                        <p class="text-2xl font-black mb-1">${remainingKm.toLocaleString()} <span class="text-[10px] font-normal text-slate-500 uppercase">KM Sisa</span></p>
-                        <div class="progress-container mt-4 mb-2">
-                            <div class="progress-bar bg-${colorClass}-500 shadow-[0_0_10px_rgba(255,255,255,0.2)]" style="width: ${progressPerc}%"></div>
+                        <p class="text-3xl font-black mb-1 tracking-tighter">${remaining.toLocaleString()}</p>
+                        <p class="text-[9px] font-bold text-slate-600 uppercase tracking-widest mb-5">KM Sisa</p>
+                        
+                        <div class="progress-container">
+                            <div class="progress-bar neon-bg neon-shadow" style="width: ${perc}%"></div>
                         </div>
-                        <div class="text-[9px] font-bold text-slate-500 uppercase">
-                            ${isWarning ? `<span class="text-red-500 animate-pulse">Waktunya Ganti!</span>` : `Kondisi ${Math.round(progressPerc)}%`}
+                        <div class="flex justify-between mt-3">
+                            <span class="text-[8px] font-black uppercase tracking-tighter ${isCritical ? 'text-red-500 animate-pulse' : 'text-slate-500'}">
+                                ${isCritical ? 'GANTI SEKARANG' : Math.round(perc) + '% KESEHATAN'}
+                            </span>
+                            <span class="text-[8px] font-bold text-slate-700 uppercase">Int: ${interval.toLocaleString()}</span>
                         </div>
                     </div>`;
             }
         }
 
-        // --- MANAJEMEN KENDARAAN ---
-        function switchVehicle(id) {
-            activeVehicleId = id.toString();
-            saveData();
-            refreshUI();
+        function getVisibleComponents(v) {
+            return {
+                ...MASTER_COMPONENTS.shared,
+                ...MASTER_COMPONENTS[v.trans],
+                ...MASTER_COMPONENTS[v.cooling]
+            };
         }
 
+        function renderLogs(v) {
+            const body = document.getElementById('logBody');
+            body.innerHTML = v.logs.map(l => `
+                <tr class="hover:bg-white/5 transition group">
+                    <td class="p-6 text-slate-500 font-mono text-xs">${formatDate(l.date)}</td>
+                    <td class="p-6 font-bold tracking-tight">${l.km.toLocaleString()} KM</td>
+                    <td class="p-6 text-xs">
+                        ${l.type === 'replacement' ? `<span class="neon-text font-black italic">GANTI ${l.component.toUpperCase()}</span>` : `<span class="text-slate-600">Update Odometer</span>`}
+                    </td>
+                    <td class="p-6 text-center">
+                        <button onclick="deleteLog('${l.id}')" class="text-slate-700 hover:text-red-500 transition-colors"><i class="fi fi-rr-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Event Handlers
         document.getElementById('vehicleForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const newId = Date.now().toString();
-            const newVehicle = {
-                id: newId,
+            const id = Date.now().toString();
+            const newV = {
+                id,
                 name: document.getElementById('vName').value,
-                merk: document.getElementById('vMerk').value,
+                trans: document.getElementById('vTrans').value,
+                cooling: document.getElementById('vCool').value,
                 initialKm: parseInt(document.getElementById('vKm').value),
                 logs: [],
-                intervals: {...DEFAULT_INTERVALS}
+                intervals: {}
             };
-            vehicles.push(newVehicle);
-            activeVehicleId = newId;
-            saveData();
-            toggleVehicleModal();
+            vehicles.push(newV);
+            activeId = id;
+            save();
+            toggleModal('addVehicleModal');
             renderVehicleSelector();
             refreshUI();
             this.reset();
         });
 
-        function deleteActiveVehicle() {
-            if(confirm('Hapus seluruh data kendaraan ini?')) {
-                vehicles = vehicles.filter(v => v.id != activeVehicleId);
-                activeVehicleId = vehicles.length > 0 ? vehicles[0].id.toString() : null;
-                saveData();
+        document.getElementById('serviceForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const v = vehicles.find(v => v.id == activeId);
+            const km = parseInt(document.getElementById('inputKm').value);
+            const action = document.getElementById('actionType').value;
+
+            v.logs.unshift({
+                id: Date.now().toString(),
+                date: document.getElementById('inputDate').value,
+                km,
+                type: action,
+                component: action === 'replacement' ? document.getElementById('inputComponent').value : null
+            });
+
+            v.logs.sort((a,b) => b.km - a.km);
+            save();
+            refreshUI();
+            this.reset();
+            document.getElementById('inputDate').valueAsDate = new Date();
+            document.getElementById('compSelectWrapper').classList.add('hidden');
+        });
+
+        function deleteVehicle() {
+            if (confirm("Hapus total data kendaraan ini beserta riwayatnya?")) {
+                vehicles = vehicles.filter(v => v.id != activeId);
+                activeId = vehicles.length > 0 ? vehicles[0].id : null;
+                save();
                 renderVehicleSelector();
                 refreshUI();
             }
         }
 
-        // --- MANAJEMEN LOG SERVIS ---
-        document.getElementById('serviceForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const vIdx = vehicles.findIndex(v => v.id == activeVehicleId);
-            const action = document.getElementById('actionType').value;
-            
-            const newLog = {
-                id: Date.now(),
-                date: document.getElementById('serviceDate').value,
-                km: parseInt(document.getElementById('currentKm').value),
-                type: action,
-                component: action === 'replacement' ? document.getElementById('componentType').value : null
-            };
-
-            vehicles[vIdx].logs.unshift(newLog);
-            saveData();
-            refreshUI();
-            this.reset();
-            document.getElementById('serviceDate').valueAsDate = new Date();
-            document.getElementById('componentWrapper').classList.add('hidden');
-        });
-
-        function deleteLog(id) {
-            if(confirm('Hapus log ini?')) {
-                const vIdx = vehicles.findIndex(v => v.id == activeVehicleId);
-                vehicles[vIdx].logs = vehicles[vIdx].logs.filter(l => l.id !== id);
-                saveData();
+        function deleteLog(logId) {
+            if (confirm("Hapus baris riwayat ini?")) {
+                const v = vehicles.find(v => v.id == activeId);
+                v.logs = v.logs.filter(l => l.id != logId);
+                save();
                 refreshUI();
             }
         }
 
-        // --- UI UTILITY ---
+        function saveIntervals() {
+            const v = vehicles.find(v => v.id == activeId);
+            const inputs = document.querySelectorAll('#intervalForm input');
+            inputs.forEach(i => v.intervals[i.name] = parseInt(i.value));
+            save();
+            toggleModal('intervalModal');
+            refreshUI();
+        }
+
+        // Helpers
+        function switchVehicle(id) { activeId = id; save(); refreshUI(); }
+        function toggleModal(id) { 
+            const m = document.getElementById(id);
+            m.classList.toggle('hidden'); 
+            if(id === 'intervalModal' && !m.classList.contains('hidden')) renderIntervalInputs();
+        }
+        function save() { 
+            localStorage.setItem('motoPulseUltimate_Data', JSON.stringify(vehicles)); 
+            localStorage.setItem('motoPulseUltimate_ActiveId', activeId);
+        }
+        function toggleComponentSelect() {
+            const action = document.getElementById('actionType').value;
+            document.getElementById('compSelectWrapper').classList.toggle('hidden', action !== 'replacement');
+        }
         function renderVehicleSelector() {
-            const selector = document.getElementById('vehicleSelector');
-            if (vehicles.length === 0) {
-                selector.innerHTML = '<option disabled selected>Tidak ada motor</option>';
-                return;
-            }
-            selector.innerHTML = vehicles.map(v => `<option value="${v.id}" ${v.id == activeVehicleId ? 'selected' : ''}>${v.name}</option>`).join('');
+            const s = document.getElementById('vehicleSelector');
+            s.innerHTML = vehicles.map(v => `<option value="${v.id}" ${v.id == activeId ? 'selected' : ''}>${v.name}</option>`).join('');
+            if(vehicles.length === 0) s.innerHTML = '<option disabled selected>Daftar Motor Kosong</option>';
         }
-
-        function renderHistory() {
-            const vehicle = vehicles.find(v => v.id == activeVehicleId);
-            const tbody = document.getElementById('historyTable');
-            const empty = document.getElementById('emptyState');
-            tbody.innerHTML = '';
-            if (!vehicle || vehicle.logs.length === 0) { empty.classList.remove('hidden'); return; }
-            empty.classList.add('hidden');
-            vehicle.logs.forEach(log => {
-                const activity = log.type === 'replacement' ? `<span class="text-indigo-400 font-bold italic">Ganti ${log.component}</span>` : `<span class="text-slate-500">Update Odometer</span>`;
-                tbody.innerHTML += `<tr class="hover:bg-white/5 transition"><td class="p-4 text-slate-400 font-mono text-xs">${formatDate(log.date)}</td><td class="p-4 font-bold text-white">${log.km.toLocaleString()} KM</td><td class="p-4 text-xs">${activity}</td><td class="p-4 text-center"><button onclick="deleteLog(${log.id})" class="text-slate-600 hover:text-red-500"><i class="fi fi-rr-trash"></i></button></td></tr>`;
-            });
+        function populateComponentDropdown(v) {
+            const s = document.getElementById('inputComponent');
+            const comps = getVisibleComponents(v);
+            s.innerHTML = Object.keys(comps).map(name => `<option value="${name}">${name}</option>`).join('');
         }
-
-        function renderComponentOptions() {
-            const select = document.getElementById('componentType');
-            select.innerHTML = Object.keys(COMPONENT_MAP).map(key => `<option value="${key}">${key}</option>`).join('');
-        }
-
-        function toggleVehicleModal() {
-            const m = document.getElementById('vehicleModal');
-            m.classList.toggle('opacity-0');
-            m.classList.toggle('pointer-events-none');
-        }
-
-        function toggleIntervalModal() {
-            const m = document.getElementById('intervalModal');
-            const vehicle = vehicles.find(v => v.id == activeVehicleId);
+        function renderIntervalInputs() {
+            const v = vehicles.find(v => v.id == activeId);
             const container = document.getElementById('intervalForm');
-            if (m.classList.contains('opacity-0') && vehicle) {
-                // Gunakan interval dari motor, kalau gak ada pakai default
-                const currentInt = vehicle.intervals || DEFAULT_INTERVALS;
-                container.innerHTML = Object.keys(DEFAULT_INTERVALS).map(key => `<div><label class="text-[9px] text-slate-500 uppercase font-bold">${key}</label><input type="number" name="${key}" value="${currentInt[key] || DEFAULT_INTERVALS[key]}" class="w-full bg-slate-800 p-2 rounded-lg text-sm border border-slate-700 outline-none"></div>`).join('');
-            }
-            m.classList.toggle('opacity-0');
-            m.classList.toggle('pointer-events-none');
+            const comps = getVisibleComponents(v);
+            container.innerHTML = Object.entries(comps).map(([name, config]) => `
+                <div>
+                    <label class="text-[9px] font-black text-slate-500 uppercase ml-1">${name}</label>
+                    <input type="number" name="${name}" value="${v.intervals[name] || config.default}" class="w-full p-4 rounded-2xl outline-none">
+                </div>
+            `).join('');
         }
-
-        document.getElementById('actionType').addEventListener('change', function() {
-            document.getElementById('componentWrapper').classList.toggle('hidden', this.value === 'update');
-        });
-
-        function formatDate(d) { return new Date(d).toLocaleDateString('id-ID', {day:'2-digit', month:'short', year:'2-digit'}); }
+        function formatDate(d) { return new Date(d).toLocaleDateString('id-ID', {day:'2-digit', month:'short', year:'numeric'}); }
 
         init();
     </script>
