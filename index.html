@@ -347,7 +347,7 @@
             document.body.className = "min-h-screen " + (vehicle.cooling === 'air' ? "theme-aircooled" : (vehicle.trans === 'matic' ? "theme-matic-radiator" : "theme-manual-radiator"));
             document.getElementById('displayName').innerText = vehicle.name;
             document.getElementById('tagTrans').innerText = vehicle.trans;
-            document.getElementById('tagCool').innerText = vehicle.cooling === 'radiator' ? 'Radiator' : 'Air Cooled';
+            document.getElementById('tagCool').innerText = vehicle.cooling === 'radiator' ? 'Radiator' : 'Pendingin Udara';
             
             const curKm = getLatestKm(vehicle);
             document.getElementById('displayOdo').innerHTML = `${curKm.toLocaleString()} <span class="text-xl text-slate-700 font-light italic">KM</span>`;
