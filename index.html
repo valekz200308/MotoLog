@@ -8,55 +8,23 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-bold-straight/css/uicons-bold-straight.css'>
-    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
-    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
-        
-        :root {
-            --neon-color: #22d3ee;
-            --neon-glow: rgba(34, 211, 238, 0.3);
-        }
-
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: #0f172a;
-            color: #f1f5f9;
-            transition: all 0.5s ease;
-        }
-
+        :root { --neon-color: #22d3ee; --neon-glow: rgba(34, 211, 238, 0.3); }
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #f1f5f9; transition: all 0.5s ease; }
         .theme-matic-radiator { --neon-color: #22d3ee; --neon-glow: rgba(34, 211, 238, 0.4); } 
         .theme-manual-radiator { --neon-color: #10b981; --neon-glow: rgba(16, 185, 129, 0.4); } 
         .theme-aircooled { --neon-color: #f59e0b; --neon-glow: rgba(245, 158, 11, 0.4); } 
-
         .neon-text { color: var(--neon-color); }
         .neon-bg { background-color: var(--neon-color); }
         .neon-border { border-color: var(--neon-color); }
         .neon-shadow { box-shadow: 0 0 15px var(--neon-glow); }
-
-        .card-ultimate {
-            background: rgba(30, 41, 59, 0.5);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s ease;
-        }
-
-        .card-ultimate:hover {
-            border-color: var(--neon-color);
-            box-shadow: 0 0 20px var(--neon-glow);
-            transform: translateY(-2px);
-        }
-
+        .card-ultimate { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); transition: all 0.3s ease; }
+        .card-ultimate:hover { border-color: var(--neon-color); box-shadow: 0 0 20px var(--neon-glow); transform: translateY(-2px); }
         .progress-container { background: rgba(255, 255, 255, 0.05); height: 6px; border-radius: 10px; overflow: hidden; }
         .progress-bar { height: 100%; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
-
-        input, select { 
-            background: #1e293b !important; 
-            border: 1px solid #334155 !important; 
-            color: white !important; 
-        }
-
-        .modal-overlay { backdrop-filter: blur(8px); background: rgba(0,0,0,0.8); }
+        input, select { background: #1e293b !important; border: 1px solid #334155 !important; color: white !important; }
+        .modal-overlay { backdrop-filter: blur(8px); background: rgba(0,0,0,0.8); z-index: 100; }
         .fade-in { animation: fadeIn 0.5s ease-in; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -74,36 +42,38 @@
                     <p class="text-[10px] text-slate-500 font-bold tracking-[0.3em] uppercase">Advanced Maintenance Hub</p>
                 </div>
             </div>
-
             <div class="flex items-center gap-3 w-full md:w-auto">
-                <select id="vehicleSelector" onchange="switchVehicle(this.value)" class="flex-grow md:w-64 px-4 py-2.5 rounded-xl outline-none focus:ring-2 focus:ring-cyan-500 transition-all">
-                </select>
+                <select id="vehicleSelector" onchange="switchVehicle(this.value)" class="flex-grow md:w-64 px-4 py-2.5 rounded-xl outline-none focus:ring-2 focus:ring-cyan-500 transition-all"></select>
                 <button onclick="toggleModal('addVehicleModal')" class="bg-white text-slate-900 px-5 py-2.5 rounded-xl font-bold transition flex items-center gap-2 hover:bg-slate-200 active:scale-95">
-                    <i class="fi fi-rr-plus-small"></i> <span>Daftar Motor</span>
+                    <i class="fi fi-rr-plus-small"></i> <span>Daftar</span>
                 </button>
             </div>
         </div>
     </header>
 
     <main class="container mx-auto px-4 py-10">
-        
         <div id="emptyState" class="hidden text-center py-20 fade-in">
             <div class="inline-block p-10 bg-slate-900/50 rounded-full mb-6 border border-white/5">
-                <i class="fi fi-br-empty-set text-6xl text-slate-700"></i>
+                <i class="fi fi-rr-box-open text-6xl text-slate-700"></i>
             </div>
             <h2 class="text-3xl font-bold text-slate-400">Belum Ada Kendaraan</h2>
-            <p class="text-slate-500 mt-2 mb-10 max-w-md mx-auto">Pantau kesehatan motor Anda secara presisi.</p>
-            <button onclick="toggleModal('addVehicleModal')" class="neon-bg text-slate-900 px-10 py-4 rounded-2xl font-black shadow-xl neon-shadow hover:scale-105 transition">MULAI SEKARANG</button>
+            <button onclick="toggleModal('addVehicleModal')" class="neon-bg text-slate-900 px-10 py-4 rounded-2xl font-black shadow-xl neon-shadow mt-10 hover:scale-105 transition">MULAI SEKARANG</button>
         </div>
 
         <div id="mainDashboard" class="hidden fade-in">
-            <!-- Info Utama -->
             <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
                 <div>
-                    <h2 id="displayName" class="text-5xl font-black text-white mb-2 tracking-tighter">--</h2>
+                    <div class="flex items-center gap-4 mb-2">
+                        <h2 id="displayName" class="text-5xl font-black text-white tracking-tighter">--</h2>
+                        <button onclick="openEditModal()" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-all" title="Pengaturan & Modifikasi">
+                            <i class="fi fi-rr-settings-sliders text-slate-400"></i>
+                        </button>
+                    </div>
                     <div class="flex flex-wrap gap-2">
                         <span id="tagTrans" class="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest neon-bg text-slate-900 neon-shadow">--</span>
                         <span id="tagCool" class="px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-slate-800 text-slate-400 border border-white/10">--</span>
+                        <span id="tagFuel" class="px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-amber-500/20 text-amber-500 border border-amber-500/20">--</span>
+                        <span id="tagLevel" class="px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-fuchsia-500/20 text-fuchsia-400 border border-fuchsia-500/20">--</span>
                     </div>
                 </div>
                 <div class="text-right">
@@ -112,180 +82,132 @@
                 </div>
             </div>
 
-            <!-- CARD RINGKASAN BBM (BARU) -->
             <section id="fuelSummaryCard" class="mb-8 hidden animate-fade-in">
-                <div class="card-ultimate p-6 rounded-[2.5rem] border-fuchsia-500/20 relative overflow-hidden group">
-                    <div class="absolute -right-4 -top-4 opacity-10 group-hover:rotate-12 transition-transform duration-700">
-                        <i class="fi fi-rr-gas-pump text-8xl text-fuchsia-500"></i>
+                <div class="card-ultimate p-6 rounded-[2.5rem] border-fuchsia-500/20 flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden">
+                    <div class="flex items-center gap-4 relative z-10">
+                        <div class="w-14 h-14 rounded-2xl bg-fuchsia-500/20 flex items-center justify-center border border-fuchsia-500/30">
+                            <i class="fi fi-rr-leaf text-fuchsia-400 text-2xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Efisiensi BBM</p>
+                            <h3 id="fuelAvgDisplay" class="text-3xl font-black text-white italic">-- <span class="text-sm font-normal text-slate-500 not-italic">KM/L</span></h3>
+                        </div>
                     </div>
-                    <div class="flex flex-col md:flex-row justify-between items-center gap-6 relative z-10">
-                        <div class="flex items-center gap-4">
-                            <div class="w-14 h-14 rounded-2xl bg-fuchsia-500/20 flex items-center justify-center border border-fuchsia-500/30">
-                                <i class="fi fi-rr-leaf text-fuchsia-400 text-2xl"></i>
-                            </div>
-                            <div>
-                                <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Efisiensi BBM Terakhir</p>
-                                <h3 id="fuelAvgDisplay" class="text-3xl font-black text-white italic">-- <span class="text-sm font-normal text-slate-500 not-italic">KM/L</span></h3>
-                            </div>
-                        </div>
-                        <div class="text-center md:text-left px-6 py-2 rounded-2xl bg-white/5 border border-white/5">
-                            <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Status Efisiensi</p>
-                            <p id="fuelStatusDisplay" class="font-black text-fuchsia-400 uppercase italic tracking-tighter">Menganalisa...</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Biaya Bulan Ini</p>
-                            <h3 id="fuelMonthlyCost" class="text-xl font-black text-white italic">Rp 0</h3>
-                        </div>
+                    <div class="text-right relative z-10">
+                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Biaya Bulan Ini</p>
+                        <h3 id="fuelMonthlyCost" class="text-xl font-black text-white italic">Rp 0</h3>
                     </div>
                 </div>
             </section>
 
-            <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mb-16" id="componentGrid">
-            </section>
+            <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mb-16" id="componentGrid"></section>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
                 <div class="lg:col-span-1">
-                    <!-- TABS FORM (BARU) -->
                     <div class="flex gap-2 mb-4">
                         <button onclick="toggleForm('service')" id="btnTabService" class="flex-1 py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest bg-white text-slate-900 shadow-lg transition-all">🛠️ Servis</button>
                         <button onclick="toggleForm('fuel')" id="btnTabFuel" class="flex-1 py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest bg-slate-800 text-slate-400 border border-white/5 transition-all">⛽ Isi BBM</button>
                     </div>
-
-                    <div class="card-ultimate p-8 rounded-[2rem] border-white/5 relative overflow-hidden">
-                        <!-- FORM SERVIS (LAMA) -->
+                    <div class="card-ultimate p-8 rounded-[2rem]">
                         <div id="serviceFormContainer">
-                            <h3 class="text-xl font-bold mb-8 flex items-center gap-3">
-                                <i class="fi fi-rr-edit neon-text"></i> Catat Servis
-                            </h3>
+                            <h3 class="text-xl font-bold mb-8 flex items-center gap-3"><i class="fi fi-rr-edit neon-text"></i> Catat Servis</h3>
                             <form id="serviceForm" class="space-y-5">
-                                <div>
-                                    <label class="text-[10px] font-black text-slate-500 uppercase ml-1">Odometer Saat Ini</label>
-                                    <input type="number" id="inputKm" required class="w-full p-4 rounded-2xl outline-none" placeholder="15400">
-                                </div>
-                                <div>
-                                    <label class="text-[10px] font-black text-slate-500 uppercase ml-1">Jenis Aktivitas</label>
+                                <div><label class="text-[10px] font-black text-slate-500 uppercase ml-1">Odometer</label><input type="number" id="inputKm" required class="w-full p-4 rounded-2xl outline-none"></div>
+                                <div><label class="text-[10px] font-black text-slate-500 uppercase ml-1">Jenis</label>
                                     <select id="actionType" class="w-full p-4 rounded-2xl outline-none" onchange="toggleComponentSelect()">
-                                        <option value="update">Hanya Update KM</option>
-                                        <option value="replacement">Ganti Komponen</option>
+                                        <option value="update">Update KM Saja</option><option value="replacement">Ganti Komponen/Servis</option>
                                     </select>
                                 </div>
-                                <div id="compSelectWrapper" class="hidden">
-                                    <label class="text-[10px] font-black text-slate-500 uppercase ml-1">Pilih Komponen</label>
-                                    <select id="inputComponent" class="w-full p-4 rounded-2xl outline-none"></select>
-                                </div>
-                                <div>
-                                    <label class="text-[10px] font-black text-slate-500 uppercase ml-1">Tanggal</label>
-                                    <input type="date" id="inputDate" required class="w-full p-4 rounded-2xl outline-none">
-                                </div>
-                                <button type="submit" class="w-full neon-bg text-slate-900 py-5 rounded-2xl font-black uppercase tracking-widest mt-4 shadow-lg neon-shadow active:scale-95 transition">SIMPAN AKTIVITAS</button>
+                                <div id="compSelectWrapper" class="hidden"><label class="text-[10px] font-black text-slate-500 uppercase ml-1">Pilih Komponen</label><select id="inputComponent" class="w-full p-4 rounded-2xl outline-none"></select></div>
+                                <div><label class="text-[10px] font-black text-slate-500 uppercase ml-1">Tanggal</label><input type="date" id="inputDate" required class="w-full p-4 rounded-2xl outline-none"></div>
+                                <button type="submit" class="w-full neon-bg text-slate-900 py-5 rounded-2xl font-black uppercase tracking-widest shadow-lg neon-shadow active:scale-95 transition">SIMPAN</button>
                             </form>
                         </div>
-
-                        <!-- FORM BBM (BARU) -->
                         <div id="fuelFormContainer" class="hidden">
-                            <h3 class="text-xl font-bold mb-8 flex items-center gap-3">
-                                <i class="fi fi-rr-gas-pump text-fuchsia-500"></i> Isi Bensin
-                            </h3>
-                            <form id="fuelForm" class="space-y-5">
-                                <div>
-                                    <label class="text-[10px] font-black text-slate-500 uppercase ml-1">Odometer Saat Isi (KM)</label>
-                                    <input type="number" id="fuelKm" required class="w-full p-4 rounded-2xl outline-none focus:ring-2 focus:ring-fuchsia-500" placeholder="15450">
-                                </div>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label class="text-[10px] font-black text-slate-500 uppercase ml-1">Jumlah Liter</label>
-                                        <input type="number" step="0.01" id="fuelLiters" required class="w-full p-4 rounded-2xl outline-none focus:ring-2 focus:ring-fuchsia-500" placeholder="0.00">
-                                    </div>
-                                    <div>
-                                        <label class="text-[10px] font-black text-slate-500 uppercase ml-1">Harga/L (Opsional)</label>
-                                        <input type="number" id="fuelPrice" class="w-full p-4 rounded-2xl outline-none focus:ring-2 focus:ring-fuchsia-500" placeholder="10000">
-                                    </div>
-                                </div>
-                                <div>
-                                    <label class="text-[10px] font-black text-slate-500 uppercase ml-1">Tanggal</label>
-                                    <input type="date" id="fuelDate" required class="w-full p-4 rounded-2xl outline-none">
-                                </div>
-                                <button type="submit" class="w-full bg-fuchsia-600 text-white py-5 rounded-2xl font-black uppercase tracking-widest mt-4 shadow-lg hover:shadow-fuchsia-500/40 transition-all active:scale-95">CATAT PENGISIAN</button>
-                            </form>
+                             <h3 class="text-xl font-bold mb-8 flex items-center gap-3"><i class="fi fi-rr-gas-pump text-fuchsia-500"></i> Isi Bensin</h3>
+                             <form id="fuelForm" class="space-y-5">
+                                 <div><label class="text-[10px] font-black text-slate-500 uppercase ml-1">Odometer (KM)</label><input type="number" id="fuelKm" required class="w-full p-4 rounded-2xl outline-none"></div>
+                                 <div class="grid grid-cols-2 gap-4">
+                                     <div><label class="text-[10px] font-black text-slate-500 uppercase ml-1">Liter</label><input type="number" step="0.01" id="fuelLiters" required class="w-full p-4 rounded-2xl outline-none"></div>
+                                     <div><label class="text-[10px] font-black text-slate-500 uppercase ml-1">Harga Total</label><input type="number" id="fuelPrice" class="w-full p-4 rounded-2xl outline-none"></div>
+                                 </div>
+                                 <div><label class="text-[10px] font-black text-slate-500 uppercase ml-1">Tanggal</label><input type="date" id="fuelDate" required class="w-full p-4 rounded-2xl outline-none"></div>
+                                 <button type="submit" class="w-full bg-fuchsia-600 text-white py-5 rounded-2xl font-black uppercase tracking-widest active:scale-95 transition">CATAT BBM</button>
+                             </form>
                         </div>
                     </div>
-                    <button onclick="deleteVehicle()" class="w-full mt-8 text-slate-600 hover:text-red-500 text-[10px] font-black uppercase transition tracking-[0.3em]">Hapus Kendaraan</button>
                 </div>
-
                 <div class="lg:col-span-2">
                     <div class="card-ultimate rounded-[2rem] overflow-hidden">
                         <div class="p-8 border-b border-white/5 flex justify-between items-center bg-white/5">
                             <h3 class="font-black uppercase text-xs tracking-[0.2em]">Logbook Digital</h3>
                             <button onclick="toggleModal('intervalModal')" class="text-[10px] font-black neon-text hover:underline transition-all">SETEL INTERVAL</button>
                         </div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left">
-                                <thead class="bg-slate-900/80 text-[10px] uppercase font-black text-slate-500">
-                                    <tr>
-                                        <th class="p-6">Tanggal</th>
-                                        <th class="p-6">Odo</th>
-                                        <th class="p-6">Keterangan</th>
-                                        <th class="p-6 text-center">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="logBody" class="text-sm divide-y divide-white/5">
-                                </tbody>
-                            </table>
-                        </div>
+                        <div class="overflow-x-auto"><table class="w-full text-left"><tbody id="logBody" class="divide-y divide-white/5"></tbody></table></div>
                     </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Modals (Tetap Sama) -->
+    <!-- MODAL REGISTRASI -->
     <div id="addVehicleModal" class="fixed inset-0 z-50 modal-overlay hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 w-full max-w-lg rounded-[2.5rem] p-10 border border-white/10 shadow-2xl">
-            <h2 class="text-3xl font-black mb-8 tracking-tighter">Registrasi Motor</h2>
-            <form id="vehicleForm" class="space-y-6">
-                <div>
-                    <label class="text-[10px] font-black text-slate-500 uppercase ml-1">Nama Motor</label>
-                    <input type="text" id="vName" placeholder="Contoh: Harley Davidson" required class="w-full p-4 rounded-2xl outline-none">
+            <h2 class="text-3xl font-black mb-8 tracking-tighter uppercase">Registrasi Motor</h2>
+            <form id="vehicleForm" class="space-y-4">
+                <div><label class="text-[10px] font-black text-slate-500 uppercase ml-1">Nama Motor</label><input type="text" id="vName" required class="w-full p-4 rounded-2xl outline-none" placeholder="Vario 150"></div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="text-[10px] font-black text-slate-500 uppercase ml-1">Odometer Awal</label><input type="number" id="vKm" required class="w-full p-4 rounded-2xl outline-none"></div>
+                    <div><label class="text-[10px] font-black text-slate-500 uppercase ml-1">Transmisi</label><select id="vTrans" class="w-full p-4 rounded-2xl outline-none"><option value="matic">MATIC</option><option value="manual">MANUAL</option></select></div>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-[10px] font-black text-slate-500 uppercase ml-1">Odometer Awal</label>
-                        <input type="number" id="vKm" placeholder="0" required class="w-full p-4 rounded-2xl outline-none">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-black text-slate-500 uppercase ml-1">Transmisi</label>
-                        <select id="vTrans" class="w-full p-4 rounded-2xl outline-none">
-                            <option value="matic">MATIC</option>
-                            <option value="manual">MANUAL</option>
-                        </select>
-                    </div>
+                    <div><label class="text-[10px] font-black text-slate-500 uppercase ml-1">Pendingin</label><select id="vCool" class="w-full p-4 rounded-2xl outline-none"><option value="radiator">RADIATOR</option><option value="air">UDARA</option></select></div>
+                    <div><label class="text-[10px] font-black text-slate-500 uppercase ml-1">Bahan Bakar</label><select id="vFuelSystem" class="w-full p-4 rounded-2xl outline-none"><option value="karbu">KARBURATOR</option><option value="injeksi">INJEKSI</option></select></div>
                 </div>
-                <div>
-                    <label class="text-[10px] font-black text-slate-500 uppercase ml-1">Sistem Pendingin</label>
-                    <select id="vCool" class="w-full p-4 rounded-2xl outline-none">
-                        <option value="radiator">RADIATOR</option>
-                        <option value="air">PENDINGIN UDARA</option>
-                    </select>
+                <div><label class="text-[10px] font-black text-slate-500 uppercase ml-1">Level Pemahaman</label>
+                    <select id="vLevel" class="w-full p-4 rounded-2xl outline-none"><option value="beginner">MASIH AWAM</option><option value="expert">SUDAH PAHAM</option></select>
                 </div>
-                <div class="flex gap-4 pt-6">
-                    <button type="button" onclick="toggleModal('addVehicleModal')" class="flex-1 bg-slate-800 py-5 rounded-2xl font-bold text-slate-400">BATAL</button>
-                    <button type="submit" class="flex-1 neon-bg text-slate-900 py-5 rounded-2xl font-black neon-shadow">DAFTARKAN</button>
+                <div class="flex gap-4 pt-4">
+                    <button type="button" onclick="toggleModal('addVehicleModal')" class="flex-1 bg-slate-800 py-4 rounded-2xl font-bold text-slate-400">BATAL</button>
+                    <button type="submit" class="flex-1 neon-bg text-slate-900 py-4 rounded-2xl font-black neon-shadow">DAFTARKAN</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <div id="intervalModal" class="fixed inset-0 z-50 modal-overlay hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 w-full max-w-lg rounded-[2rem] border border-white/10 shadow-2xl flex flex-col max-h-[90vh]">
-            <div class="p-6 border-b border-white/5"><h2 class="text-lg font-black neon-text uppercase tracking-[0.2em]">Interval KM</h2></div>
-            <form id="intervalForm" class="p-6 overflow-y-auto grid grid-cols-2 gap-4 bg-slate-900/50"></form>
-            <div class="p-6 border-t border-white/5 flex gap-3">
-                <button onclick="toggleModal('intervalModal')" class="flex-1 bg-slate-800 py-3.5 rounded-xl font-bold text-slate-400 text-sm">BATAL</button>
-                <button onclick="saveIntervals()" class="flex-1 neon-bg text-slate-900 py-3.5 rounded-xl font-black text-sm neon-shadow">TERAPKAN</button>
-            </div>
+    <!-- MODAL MODIFIKASI -->
+    <div id="editVehicleModal" class="fixed inset-0 z-50 modal-overlay hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 w-full max-w-lg rounded-[2.5rem] p-10 border border-white/10 shadow-2xl">
+            <h2 class="text-3xl font-black mb-8 tracking-tighter uppercase">Modifikasi & Pengaturan</h2>
+            <form id="editForm" class="space-y-4">
+                <div><label class="text-[10px] font-black text-slate-500 uppercase ml-1">Nama Motor</label><input type="text" id="editName" required class="w-full p-4 rounded-2xl outline-none"></div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="text-[10px] font-black text-slate-500 uppercase ml-1">Transmisi</label><select id="editTrans" class="w-full p-4 rounded-2xl outline-none"><option value="matic">MATIC</option><option value="manual">MANUAL</option></select></div>
+                    <div><label class="text-[10px] font-black text-slate-500 uppercase ml-1">Pendingin</label><select id="editCool" class="w-full p-4 rounded-2xl outline-none"><option value="radiator">RADIATOR</option><option value="air">UDARA</option></select></div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="text-[10px] font-black text-slate-500 uppercase ml-1">Sistem Pembakaran</label><select id="editFuelSystem" class="w-full p-4 rounded-2xl outline-none"><option value="karbu">KARBURATOR</option><option value="injeksi">INJEKSI</option></select></div>
+                    <div><label class="text-[10px] font-black text-slate-500 uppercase ml-1">Level</label><select id="editLevel" class="w-full p-4 rounded-2xl outline-none"><option value="beginner">AWAM</option><option value="expert">EXPERT</option></select></div>
+                </div>
+                <div class="pt-6 space-y-3">
+                    <button type="submit" class="w-full neon-bg text-slate-900 py-4 rounded-2xl font-black neon-shadow uppercase">Simpan Perubahan</button>
+                    <button type="button" onclick="deleteVehicle()" class="w-full bg-red-500/10 text-red-500 border border-red-500/20 py-4 rounded-2xl font-black uppercase hover:bg-red-500 hover:text-white transition-all">Hapus Kendaraan</button>
+                    <button type="button" onclick="toggleModal('editVehicleModal')" class="w-full bg-slate-800 py-4 rounded-2xl font-bold text-slate-400 uppercase">Batal</button>
+                </div>
+            </form>
         </div>
     </div>
 
+    <!-- INTERVAL MODAL -->
+    <div id="intervalModal" class="fixed inset-0 z-50 modal-overlay hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 w-full max-w-lg rounded-[2rem] border border-white/10 shadow-2xl flex flex-col max-h-[90vh]">
+            <div class="p-6 border-b border-white/5"><h2 class="text-lg font-black neon-text uppercase">Interval KM</h2></div>
+            <form id="intervalForm" class="p-6 overflow-y-auto grid grid-cols-2 gap-4 bg-slate-900/50"></form>
+            <div class="p-6 border-t border-white/5 flex gap-3"><button onclick="toggleModal('intervalModal')" class="flex-1 bg-slate-800 py-3.5 rounded-xl text-slate-400">BATAL</button><button onclick="saveIntervals()" class="flex-1 neon-bg text-slate-900 py-3.5 rounded-xl font-black">TERAPKAN</button></div>
+        </div>
+    </div>
+
+    <!-- FOOTER (DIKEMBALIKAN) -->
     <footer class="mt-20 pb-12 border-t border-white/5 pt-12">
         <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-8">
             <div class="text-center md:text-left">
@@ -299,6 +221,23 @@
     </footer>
 
     <script>
+        const COMPONENT_INFO = {
+            "Oli Mesin": "Ganti rutin agar mesin tetap halus dan awet.",
+            "Busi": "Pengapian mesin. Ganti jika susah hidup atau brebet.",
+            "Kampas Rem Depan": "Ganti jika rem sudah mulai dalam atau bunyi.",
+            "Kampas Rem Belakang": "Pastikan kampas masih tebal demi keamanan.",
+            "Ban Depan": "Ganti jika motif sudah botak demi cengkeraman.",
+            "Ban Belakang": "Ganti jika licin, terutama saat hujan.",
+            "Filter Udara": "Agar udara masuk mesin bersih dan bertenaga.",
+            "Oli Gardan": "Pelumas gir matic. Ganti rutin 2-3x ganti oli.",
+            "V-Belt": "Penggerak roda matic. Wajib ganti sebelum putus.",
+            "Rantai": "Penyalur tenaga. Bersihkan dan lumasi rutin.",
+            "Kampas Kopling": "Ganti jika motor selip saat ditarik gas.",
+            "Air Radiator": "Pendingin mesin. Pastikan tidak berkurang.",
+            "Servis Karbu": "Bersihkan kotoran agar gas stabil dan irit.",
+            "Servis Injeksi": "Kalibrasi injector agar semprotan bensin presisi."
+        };
+
         const MASTER_COMPONENTS = {
             shared: {
                 "Oli Mesin": { icon: "fi-rr-oil-can", default: 2000 },
@@ -309,18 +248,15 @@
                 "Ban Belakang": { icon: "fi-rr-tire", default: 20000 },
                 "Filter Udara": { icon: "fi-rr-wind", default: 5000 }
             },
-            matic: {
-                "Oli Gardan": { icon: "fi-rr-settings", default: 8000 },
-                "V-Belt": { icon: "fi-rr-label", default: 20000 }
+            trans: {
+                matic: { "Oli Gardan": { icon: "fi-rr-settings", default: 8000 }, "V-Belt": { icon: "fi-rr-label", default: 20000 } },
+                manual: { "Rantai": { icon: "fi-rr-link", default: 25000 }, "Kampas Kopling": { icon: "fi-rr-layers", default: 30000 } }
             },
-            manual: {
-                "Rantai": { icon: "fi-rr-link", default: 25000 },
-                "Kampas Kopling": { icon: "fi-rr-layers", default: 30000 }
-            },
-            radiator: {
-                "Air Radiator": { icon: "fi-bs-dewpoint", default: 10000 }
-            },
-            air: {}
+            cooling: { radiator: { "Air Radiator": { icon: "fi-bs-dewpoint", default: 10000 } }, air: {} },
+            fuel: {
+                karbu: { "Servis Karbu": { icon: "fi-rr-settings-sliders", default: 5000 } },
+                injeksi: { "Servis Injeksi": { icon: "fi-rr-microchip", default: 10000 } }
+            }
         };
 
         let vehicles = JSON.parse(localStorage.getItem('motoPulseUltimate_Data')) || [];
@@ -328,8 +264,7 @@
 
         function init() {
             if (vehicles.length > 0 && !activeId) activeId = vehicles[0].id;
-            renderVehicleSelector();
-            refreshUI();
+            renderVehicleSelector(); refreshUI();
             document.getElementById('inputDate').valueAsDate = new Date();
             document.getElementById('fuelDate').valueAsDate = new Date();
         }
@@ -347,15 +282,14 @@
             document.body.className = "min-h-screen " + (vehicle.cooling === 'air' ? "theme-aircooled" : (vehicle.trans === 'matic' ? "theme-matic-radiator" : "theme-manual-radiator"));
             document.getElementById('displayName').innerText = vehicle.name;
             document.getElementById('tagTrans').innerText = vehicle.trans;
-            document.getElementById('tagCool').innerText = vehicle.cooling === 'radiator' ? 'Radiator' : 'Pendingin Udara';
+            document.getElementById('tagCool').innerText = vehicle.cooling === 'radiator' ? 'Radiator' : 'Udara';
+            document.getElementById('tagFuel').innerText = vehicle.fuelSystem;
+            document.getElementById('tagLevel').innerText = vehicle.userLevel === 'beginner' ? '💡 AWAM' : '⚡ EXPERT';
             
             const curKm = getLatestKm(vehicle);
             document.getElementById('displayOdo').innerHTML = `${curKm.toLocaleString()} <span class="text-xl text-slate-700 font-light italic">KM</span>`;
 
-            renderCards(vehicle, curKm);
-            renderLogs(vehicle);
-            populateComponentDropdown(vehicle);
-            updateFuelUI(vehicle); // Update Ringkasan BBM
+            renderCards(vehicle, curKm); renderLogs(vehicle); populateComponentDropdown(vehicle); updateFuelUI(vehicle);
         }
 
         function getLatestKm(v) {
@@ -364,152 +298,120 @@
         }
 
         function renderCards(v, curKm) {
-            const grid = document.getElementById('componentGrid');
-            grid.innerHTML = '';
-            const comps = {...MASTER_COMPONENTS.shared, ...MASTER_COMPONENTS[v.trans], ...MASTER_COMPONENTS[v.cooling]};
-            
+            const grid = document.getElementById('componentGrid'); grid.innerHTML = '';
+            const comps = { ...MASTER_COMPONENTS.shared, ...MASTER_COMPONENTS.trans[v.trans], ...MASTER_COMPONENTS.cooling[v.cooling], ...MASTER_COMPONENTS.fuel[v.fuelSystem] };
             for (const [name, config] of Object.entries(comps)) {
                 const logs = v.logs.filter(l => l.component === name && l.type === 'replacement');
-                const lastReplacementKm = logs.length > 0 ? logs[0].km : v.initialKm;
+                const lastKm = logs.length > 0 ? logs[0].km : v.initialKm;
                 const interval = (v.intervals && v.intervals[name]) ? v.intervals[name] : config.default;
-                const used = curKm - lastReplacementKm;
-                const remaining = Math.max(0, interval - used);
+                const remaining = Math.max(0, interval - (curKm - lastKm));
                 const perc = Math.min(100, Math.max(0, (remaining / interval) * 100));
                 const isCritical = remaining <= 0;
-
                 grid.innerHTML += `
-                    <div class="card-ultimate p-6 rounded-[1.8rem] border-t-4 ${isCritical ? 'neon-border neon-shadow' : 'border-transparent'}">
-                        <div class="flex justify-between items-center mb-5">
-                            <span class="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">${name}</span>
-                            <i class="fi ${config.icon} neon-text text-xl"></i>
-                        </div>
-                        <p class="text-3xl font-black mb-1 tracking-tighter">${remaining.toLocaleString()}</p>
-                        <p class="text-[9px] font-bold text-slate-600 uppercase tracking-widest mb-5">KM Sisa</p>
-                        <div class="progress-container"><div class="progress-bar neon-bg" style="width: ${perc}%"></div></div>
-                        <div class="mt-3"><span class="text-[8px] font-black uppercase ${isCritical ? 'text-red-500 animate-pulse' : 'text-slate-500'}">${isCritical ? 'GANTI SEKARANG' : Math.round(perc) + '% KESEHATAN'}</span></div>
+                    <div class="card-ultimate p-6 rounded-[1.8rem] flex flex-col justify-between border-t-4 ${isCritical ? 'neon-border neon-shadow' : 'border-transparent'}">
+                        <div><div class="flex justify-between items-center mb-5"><span class="text-[9px] font-black uppercase text-slate-500">${name}</span><i class="fi ${config.icon} neon-text text-xl"></i></div>
+                        <p class="text-3xl font-black mb-1">${remaining.toLocaleString()}</p><p class="text-[9px] font-bold text-slate-600 uppercase mb-5">KM Sisa</p>
+                        <div class="progress-container"><div class="progress-bar neon-bg" style="width: ${perc}%"></div></div></div>
+                        ${v.userLevel === 'beginner' ? `<p class="mt-3 text-[10px] text-slate-400 bg-slate-800/50 p-2 rounded-lg italic">"${COMPONENT_INFO[name]}"</p>` : ''}
                     </div>`;
             }
         }
 
-        // --- FUNGSI BARU BBM ---
-        function toggleForm(type) {
-            const sForm = document.getElementById('serviceFormContainer');
-            const fForm = document.getElementById('fuelFormContainer');
-            const btnS = document.getElementById('btnTabService');
-            const btnF = document.getElementById('btnTabFuel');
-            if (type === 'fuel') {
-                sForm.classList.add('hidden'); fForm.classList.remove('hidden');
-                btnF.className = "flex-1 py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest bg-white text-slate-900 shadow-lg transition-all";
-                btnS.className = "flex-1 py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest bg-slate-800 text-slate-400 border border-white/5 transition-all";
-            } else {
-                fForm.classList.add('hidden'); sForm.classList.remove('hidden');
-                btnS.className = "flex-1 py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest bg-white text-slate-900 shadow-lg transition-all";
-                btnF.className = "flex-1 py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest bg-slate-800 text-slate-400 border border-white/5 transition-all";
-            }
+        function openEditModal() {
+            const v = vehicles.find(v => v.id == activeId);
+            document.getElementById('editName').value = v.name;
+            document.getElementById('editTrans').value = v.trans;
+            document.getElementById('editCool').value = v.cooling;
+            document.getElementById('editFuelSystem').value = v.fuelSystem;
+            document.getElementById('editLevel').value = v.userLevel;
+            toggleModal('editVehicleModal');
         }
 
-        function updateFuelUI(v) {
-            const fuelLogs = v.logs.filter(l => l.type === 'fuel').sort((a, b) => b.km - a.km);
-            const summaryCard = document.getElementById('fuelSummaryCard');
-            if (fuelLogs.length > 0) summaryCard.classList.remove('hidden');
-
-            if (fuelLogs.length >= 2) {
-                const latest = fuelLogs[0];
-                const previous = fuelLogs[1];
-                const distance = latest.km - previous.km;
-                const consumption = distance / latest.liters;
-                document.getElementById('fuelAvgDisplay').innerHTML = `${consumption.toFixed(1)} <span class="text-sm font-normal text-slate-500 not-italic">KM/L</span>`;
-                let status = "Normal", color = "text-fuchsia-400";
-                if (consumption > 45) { status = "Sangat Irit ✨"; color = "text-emerald-400"; }
-                else if (consumption < 35) { status = "Boros ⚠️"; color = "text-amber-500"; }
-                const statusEl = document.getElementById('fuelStatusDisplay');
-                statusEl.innerText = status; statusEl.className = `font-black uppercase italic tracking-tighter ${color}`;
-            } else {
-                document.getElementById('fuelAvgDisplay').innerText = "Menunggu Data";
-                document.getElementById('fuelStatusDisplay').innerText = "Butuh 1 Pengisian Lagi";
-            }
-
-            const now = new Date();
-            const thisMonthLogs = fuelLogs.filter(l => {
-                const d = new Date(l.date);
-                return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
-            });
-            const totalCost = thisMonthLogs.reduce((acc, curr) => acc + (curr.cost || 0), 0);
-            document.getElementById('fuelMonthlyCost').innerText = `Rp ${totalCost.toLocaleString()}`;
-        }
-
-        document.getElementById('fuelForm').addEventListener('submit', function(e) {
+        document.getElementById('editForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const v = vehicles.find(v => v.id == activeId);
-            const km = parseInt(document.getElementById('fuelKm').value);
-            const liters = parseFloat(document.getElementById('fuelLiters').value);
-            const price = parseInt(document.getElementById('fuelPrice').value) || 0;
-            const latestKm = getLatestKm(v);
-
-            if (km < latestKm) { alert(`Odometer tidak boleh lebih rendah dari ${latestKm} KM!`); return; }
-
-            v.logs.unshift({
-                id: Date.now().toString(),
-                date: document.getElementById('fuelDate').value,
-                km, type: 'fuel', liters, cost: liters * price
-            });
-            v.logs.sort((a,b) => b.km - a.km);
-            save(); refreshUI(); this.reset();
-            document.getElementById('fuelDate').valueAsDate = new Date();
+            v.name = document.getElementById('editName').value;
+            v.trans = document.getElementById('editTrans').value;
+            v.cooling = document.getElementById('editCool').value;
+            v.fuelSystem = document.getElementById('editFuelSystem').value;
+            v.userLevel = document.getElementById('editLevel').value;
+            save(); toggleModal('editVehicleModal'); renderVehicleSelector(); refreshUI();
         });
 
-        // --- MODIFIKASI RENDER LOGS ---
-        function renderLogs(v) {
-            const body = document.getElementById('logBody');
-            body.innerHTML = v.logs.map(l => {
-                const isFuel = l.type === 'fuel';
-                return `
-                <tr class="hover:bg-white/5 transition group">
-                    <td class="p-6 text-slate-500 font-mono text-xs">${formatDate(l.date)}</td>
-                    <td class="p-6 font-bold tracking-tight">${l.km.toLocaleString()} KM</td>
-                    <td class="p-6 text-xs">
-                        ${isFuel 
-                            ? `<div class="flex items-center gap-2 text-fuchsia-400 font-black italic uppercase"><i class="fi fi-rr-gas-pump"></i> ISI BBM ${l.liters}L</div>` 
-                            : (l.type === 'replacement' ? `<span class="neon-text font-black italic uppercase">GANTI ${l.component.toUpperCase()}</span>` : `<span class="text-slate-600 uppercase font-bold">Update Odometer</span>`)
-                        }
-                    </td>
-                    <td class="p-6 text-center">
-                        <button onclick="deleteLog('${l.id}')" class="text-slate-700 hover:text-red-500 transition-colors"><i class="fi fi-rr-trash"></i></button>
-                    </td>
-                </tr>`;
-            }).join('');
+        function deleteVehicle() {
+            if (confirm("Hapus seluruh data motor ini?")) {
+                vehicles = vehicles.filter(v => v.id != activeId);
+                activeId = vehicles.length > 0 ? vehicles[0].id : null;
+                save(); toggleModal('editVehicleModal'); renderVehicleSelector(); refreshUI();
+            }
         }
-
-        // Sisanya (Handler Servis, Save, dll tetap sama)
-        document.getElementById('serviceForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const v = vehicles.find(v => v.id == activeId);
-            const km = parseInt(document.getElementById('inputKm').value);
-            const latestKm = getLatestKm(v);
-            if (km < latestKm) { alert(`Odometer tidak boleh lebih rendah dari ${latestKm} KM!`); return; }
-            const action = document.getElementById('actionType').value;
-            v.logs.unshift({
-                id: Date.now().toString(), date: document.getElementById('inputDate').value,
-                km, type: action, component: action === 'replacement' ? document.getElementById('inputComponent').value : null
-            });
-            v.logs.sort((a,b) => b.km - a.km);
-            save(); refreshUI(); this.reset();
-            document.getElementById('inputDate').valueAsDate = new Date();
-            document.getElementById('compSelectWrapper').classList.add('hidden');
-        });
 
         document.getElementById('vehicleForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const id = Date.now().toString();
             vehicles.push({
                 id, name: document.getElementById('vName').value,
-                trans: document.getElementById('vTrans').value,
-                cooling: document.getElementById('vCool').value,
-                initialKm: parseInt(document.getElementById('vKm').value),
-                logs: [], intervals: {}
+                trans: document.getElementById('vTrans').value, cooling: document.getElementById('vCool').value,
+                fuelSystem: document.getElementById('vFuelSystem').value, userLevel: document.getElementById('vLevel').value,
+                initialKm: parseInt(document.getElementById('vKm').value), logs: [], intervals: {}
             });
             activeId = id; save(); toggleModal('addVehicleModal'); renderVehicleSelector(); refreshUI(); this.reset();
         });
+
+        document.getElementById('serviceForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const v = vehicles.find(v => v.id == activeId);
+            const km = parseInt(document.getElementById('inputKm').value);
+            if (km < getLatestKm(v)) { alert("KM mundur!"); return; }
+            const action = document.getElementById('actionType').value;
+            v.logs.unshift({ id: Date.now().toString(), date: document.getElementById('inputDate').value, km, type: action, component: action === 'replacement' ? document.getElementById('inputComponent').value : null });
+            v.logs.sort((a,b) => b.km - a.km); save(); refreshUI(); this.reset(); document.getElementById('inputDate').valueAsDate = new Date();
+        });
+
+        document.getElementById('fuelForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const v = vehicles.find(v => v.id == activeId);
+            const km = parseInt(document.getElementById('fuelKm').value);
+            if (km < getLatestKm(v)) { alert("KM mundur!"); return; }
+            v.logs.unshift({ id: Date.now().toString(), date: document.getElementById('fuelDate').value, km, type: 'fuel', liters: parseFloat(document.getElementById('fuelLiters').value), cost: parseInt(document.getElementById('fuelPrice').value) || 0 });
+            v.logs.sort((a,b) => b.km - a.km); save(); refreshUI(); this.reset(); document.getElementById('fuelDate').valueAsDate = new Date();
+        });
+
+        function switchVehicle(id) { activeId = id; save(); refreshUI(); }
+        function toggleModal(id) { document.getElementById(id).classList.toggle('hidden'); if(id === 'intervalModal') renderIntervalInputs(); }
+        function save() { localStorage.setItem('motoPulseUltimate_Data', JSON.stringify(vehicles)); localStorage.setItem('motoPulseUltimate_ActiveId', activeId); }
+        function toggleComponentSelect() { document.getElementById('compSelectWrapper').classList.toggle('hidden', document.getElementById('actionType').value !== 'replacement'); }
+        function renderVehicleSelector() { const s = document.getElementById('vehicleSelector'); s.innerHTML = vehicles.map(v => `<option value="${v.id}" ${v.id == activeId ? 'selected' : ''}>${v.name}</option>`).join(''); }
+        function populateComponentDropdown(v) { const comps = { ...MASTER_COMPONENTS.shared, ...MASTER_COMPONENTS.trans[v.trans], ...MASTER_COMPONENTS.cooling[v.cooling], ...MASTER_COMPONENTS.fuel[v.fuelSystem] }; document.getElementById('inputComponent').innerHTML = Object.keys(comps).map(name => `<option value="${name}">${name}</option>`).join(''); }
+        function formatDate(d) { return new Date(d).toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }); }
+        
+        function updateFuelUI(v) {
+            const fuelLogs = v.logs.filter(l => l.type === 'fuel');
+            const summaryCard = document.getElementById('fuelSummaryCard');
+            if (fuelLogs.length > 0) summaryCard.classList.remove('hidden');
+            if (fuelLogs.length >= 2) {
+                const distance = fuelLogs[0].km - fuelLogs[1].km;
+                document.getElementById('fuelAvgDisplay').innerHTML = `${(distance / fuelLogs[0].liters).toFixed(1)} <span class="text-sm font-normal text-slate-500">KM/L</span>`;
+            }
+            const totalCost = fuelLogs.filter(l => new Date(l.date).getMonth() === new Date().getMonth()).reduce((acc, curr) => acc + curr.cost, 0);
+            document.getElementById('fuelMonthlyCost').innerText = `Rp ${totalCost.toLocaleString()}`;
+        }
+
+        function renderLogs(v) {
+            document.getElementById('logBody').innerHTML = v.logs.map(l => `
+                <tr class="hover:bg-white/5 transition">
+                    <td class="p-4 text-slate-500 font-mono text-[10px]">${formatDate(l.date)}</td>
+                    <td class="p-4 font-bold text-xs">${l.km.toLocaleString()} KM</td>
+                    <td class="p-4 text-[10px] uppercase">${l.type === 'fuel' ? `<span class="text-fuchsia-400">⛽ BBM ${l.liters}L</span>` : (l.type === 'replacement' ? `<span class="neon-text">🛠️ ${l.component}</span>` : `KM UPDATE`)}</td>
+                    <td class="p-4 text-center"><button onclick="deleteLog('${l.id}')" class="text-slate-700 hover:text-red-500"><i class="fi fi-rr-trash"></i></button></td>
+                </tr>`).join('');
+        }
+
+        function renderIntervalInputs() {
+            const v = vehicles.find(v => v.id == activeId);
+            const comps = { ...MASTER_COMPONENTS.shared, ...MASTER_COMPONENTS.trans[v.trans], ...MASTER_COMPONENTS.cooling[v.cooling], ...MASTER_COMPONENTS.fuel[v.fuelSystem] };
+            document.getElementById('intervalForm').innerHTML = Object.entries(comps).map(([name, config]) => `<div class="space-y-1"><label class="text-[9px] font-black text-slate-500 uppercase ml-1">${name}</label><input type="number" name="${name}" value="${v.intervals[name] || config.default}" class="w-full p-2.5 rounded-xl text-xs bg-slate-800 border border-slate-700"></div>`).join('');
+        }
 
         function saveIntervals() {
             const v = vehicles.find(v => v.id == activeId);
@@ -517,34 +419,13 @@
             save(); toggleModal('intervalModal'); refreshUI();
         }
 
-        function deleteVehicle() { if (confirm("Hapus unit ini?")) { vehicles = vehicles.filter(v => v.id != activeId); activeId = vehicles[0]?.id || null; save(); renderVehicleSelector(); refreshUI(); } }
-        function deleteLog(id) { if (confirm("Hapus riwayat ini?")) { const v = vehicles.find(v => v.id == activeId); v.logs = v.logs.filter(l => l.id != id); save(); refreshUI(); } }
-        function switchVehicle(id) { activeId = id; save(); refreshUI(); }
-        function toggleModal(id) { document.getElementById(id).classList.toggle('hidden'); if(id === 'intervalModal') renderIntervalInputs(); }
-        function save() { localStorage.setItem('motoPulseUltimate_Data', JSON.stringify(vehicles)); localStorage.setItem('motoPulseUltimate_ActiveId', activeId); }
-        function toggleComponentSelect() { document.getElementById('compSelectWrapper').classList.toggle('hidden', document.getElementById('actionType').value !== 'replacement'); }
-        function renderVehicleSelector() {
-            const s = document.getElementById('vehicleSelector');
-            s.innerHTML = vehicles.map(v => `<option value="${v.id}" ${v.id == activeId ? 'selected' : ''}>${v.name}</option>`).join('');
-            if(vehicles.length === 0) s.innerHTML = '<option disabled selected>Daftar Motor Kosong</option>';
+        function deleteLog(id) { if (confirm("Hapus log?")) { const v = vehicles.find(v => v.id == activeId); v.logs = v.logs.filter(l => l.id != id); save(); refreshUI(); } }
+        function toggleForm(type) { 
+            document.getElementById('serviceFormContainer').classList.toggle('hidden', type === 'fuel'); 
+            document.getElementById('fuelFormContainer').classList.toggle('hidden', type === 'service');
+            document.getElementById('btnTabService').className = type === 'service' ? "flex-1 py-3 rounded-xl font-bold text-[10px] bg-white text-slate-900 shadow-lg" : "flex-1 py-3 rounded-xl font-bold text-[10px] bg-slate-800 text-slate-400";
+            document.getElementById('btnTabFuel').className = type === 'fuel' ? "flex-1 py-3 rounded-xl font-bold text-[10px] bg-white text-slate-900 shadow-lg" : "flex-1 py-3 rounded-xl font-bold text-[10px] bg-slate-800 text-slate-400";
         }
-        function populateComponentDropdown(v) {
-            const comps = {...MASTER_COMPONENTS.shared, ...MASTER_COMPONENTS[v.trans], ...MASTER_COMPONENTS[v.cooling]};
-            document.getElementById('inputComponent').innerHTML = Object.keys(comps).map(name => `<option value="${name}">${name}</option>`).join('');
-        }
-        function renderIntervalInputs() {
-            const v = vehicles.find(v => v.id == activeId);
-            const comps = {...MASTER_COMPONENTS.shared, ...MASTER_COMPONENTS[v.trans], ...MASTER_COMPONENTS[v.cooling]};
-            document.getElementById('intervalForm').innerHTML = Object.entries(comps).map(([name, config]) => `
-                <div class="space-y-1">
-                    <label class="text-[9px] font-black text-slate-500 uppercase block">${name}</label>
-                    <div class="relative">
-                        <input type="number" name="${name}" value="${v.intervals[name] || config.default}" class="w-full p-2.5 rounded-xl text-xs font-bold bg-slate-800 border border-slate-700">
-                        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[8px] font-bold text-slate-600">KM</span>
-                    </div>
-                </div>`).join('');
-        }
-        function formatDate(d) { const date = new Date(d); return date.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: '2-digit' }); }
 
         init();
     </script>
