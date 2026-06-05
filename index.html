@@ -84,8 +84,8 @@
 </head>
 <body class="min-h-screen theme-matic-radiator">
 
-    <header class="border-b border-white/5 bg-white/5 sticky top-0 z-40 backdrop-blur-md">
-        <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+    <header class="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-7xl border border-white/10 bg-white/5 backdrop-blur-xl rounded-[2rem] shadow-2xl transition-all duration-300">
+        <div class="container mx-auto px-6 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-3">
                 <div class="w-12 h-12 neon-bg rounded-2xl flex items-center justify-center shadow-lg neon-shadow transition-all duration-500">
                     <img src="img/logo.png" alt="Logo PaddockCheck" class="w-11 h-11 object-contain">
@@ -105,14 +105,14 @@
                     <i class="fi fi-rr-earth mr-1"></i> <span id="langLabel">ID</span>
                 </button>
                 <select id="vehicleSelector" onchange="switchVehicle(this.value)" class="flex-grow md:w-64 px-4 py-2.5 rounded-xl outline-none focus:ring-2 focus:ring-cyan-500 transition-all"></select>
-                <button onclick="toggleModal('addVehicleModal')" class="bg-white text-slate-900 px-5 py-2.5 rounded-xl font-bold transition flex items-center gap-2 hover:bg-slate-200 active:scale-95 whitespace-nowrap">
-                    <i class="fi fi-rr-plus-small"></i> <span data-i18n="btn-register">Daftar</span>
+                <button onclick="toggleModal('addVehicleModal')" class="bg-white text-slate-900 w-10 h-10 flex items-center justify-center rounded-xl font-bold transition hover:bg-slate-200 active:scale-95">
+                    <i class="fi fi-rr-plus-small text-xl"></i>
                 </button>
             </div>
         </div>
     </header>
 
-    <main class="container mx-auto px-4 py-10">
+    <main class="container mx-auto px-4 pt-40 md:pt-32 pb-10">
         <div id="emptyState" class="hidden text-center py-20 fade-in">
             <div class="inline-block p-10 bg-slate-900/50 rounded-full mb-6 border border-white/5">
                 <i class="fi fi-rr-box-open text-6xl opacity-20"></i>
@@ -159,6 +159,19 @@
                     <div class="text-right relative z-10">
                         <p class="text-[10px] font-black opacity-50 uppercase tracking-widest" data-i18n="monthly-cost-label">Biaya Bulan Ini</p>
                         <h3 id="fuelMonthlyCost" class="text-xl font-black italic">Rp 0</h3>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PERINGATAN KOMPONEN KRITIS -->
+            <section id="criticalWarningCard" class="hidden animate-fade-in mb-8">
+                <div class="card-ultimate p-6 rounded-[2.5rem] border-red-500/30 bg-red-500/5 flex flex-col md:flex-row items-center gap-6">
+                    <div class="w-14 h-14 rounded-2xl bg-red-500/20 flex items-center justify-center border border-red-500/30">
+                        <i class="fi fi-rr-exclamation text-red-500 text-2xl"></i>
+                    </div>
+                    <div class="flex-grow text-center md:text-left">
+                        <p class="text-[10px] font-black text-red-500 uppercase tracking-widest mb-2" data-i18n="warning-title">Perhatian: Komponen Perlu Diganti</p>
+                        <div id="criticalList" class="flex flex-wrap justify-center md:justify-start gap-2"></div>
                     </div>
                 </div>
             </section>
@@ -307,10 +320,10 @@
     <script>
         const TRANSLATIONS = {
             id: {
-                "header-subtitle": "Advanced Maintenance Hub", "btn-register": "Daftar", "empty-title": "Belum Ada Kendaraan", "btn-start-now": "MULAI SEKARANG", "odo-label": "Odometer Terkini", "avg-eff-label": "Efisiensi Rata-rata", "monthly-cost-label": "Biaya Bulan Ini", "tab-service": "Servis", "tab-fuel": "Isi BBM", "tab-calc": "Estimasi", "form-service-title": "Catat Servis", "label-odo": "Odometer", "label-type": "Jenis", "opt-update-odo": "Update KM Saja", "opt-replacement": "Ganti Komponen/Servis", "label-component": "Pilih Komponen", "label-date": "Tanggal", "btn-save-activity": "SIMPAN AKTIVITAS", "form-fuel-title": "Isi Bensin", "label-liters": "Liter", "label-total-price": "Harga Total", "btn-save-fuel": "CATAT PENGISIAN", "form-calc-title": "Estimator Biaya", "label-dist": "Jarak Perjalanan (KM)", "label-fuel-price": "Harga Bensin/L", "label-eff": "Konsumsi Motor", "res-fuel-needed": "Kebutuhan BBM", "res-est-cost": "Estimasi Biaya", "calc-footer": "*Data konsumsi otomatis mengambil data rata-rata motor Anda.", "logbook-title": "Logbook Digital", "btn-set-interval": "SETEL INTERVAL", "modal-reg-title": "Registrasi Motor", "label-vname": "Nama Motor", "label-initial-odo": "Odometer Awal", "label-trans": "Transmisi", "label-cooling": "Pendingin", "opt-radiator": "RADIATOR", "opt-air": "UDARA", "label-fuelsystem": "Bahan Bakar", "label-userlevel": "Level Pemahaman", "opt-beginner": "MASIH AWAM", "opt-expert": "SUDAH PAHAM", "btn-cancel": "Batal", "btn-reg": "DAFTARKAN", "modal-mod-title": "Modifikasi & Pengaturan", "btn-save-mod": "Simpan Perubahan", "btn-delete-v": "Hapus Kendaraan", "modal-interval-title": "Interval KM", "btn-apply": "TERAPKAN", "remaining-odo": "KM Sisa", "health-status": "KESEHATAN", "status-critical": "GANTI/SERVIS SEKARANG", "log-fuel": "ISI BBM", "log-update": "UPDATE KM", "log-replacement": "GANTI", "alert-km-back": "KM mundur!", "confirm-delete-log": "Hapus log?", "confirm-delete-v": "Hapus seluruh data motor ini?", "last-replacement": "Terakhir Ganti", "never": "Belum Pernah"
+                "header-subtitle": "Advanced Maintenance Hub", "btn-register": "Daftar", "empty-title": "Belum Ada Kendaraan", "btn-start-now": "MULAI SEKARANG", "odo-label": "Odometer Terkini", "avg-eff-label": "Efisiensi Rata-rata", "monthly-cost-label": "Biaya Bulan Ini", "tab-service": "Servis", "tab-fuel": "Isi BBM", "tab-calc": "Estimasi", "form-service-title": "Catat Servis", "label-odo": "Odometer", "label-type": "Jenis", "opt-update-odo": "Update KM Saja", "opt-replacement": "Ganti Komponen/Servis", "label-component": "Pilih Komponen", "label-date": "Tanggal", "btn-save-activity": "SIMPAN AKTIVITAS", "form-fuel-title": "Isi Bensin", "label-liters": "Liter", "label-total-price": "Harga Total", "btn-save-fuel": "CATAT PENGISIAN", "form-calc-title": "Estimator Biaya", "label-dist": "Jarak Perjalanan (KM)", "label-fuel-price": "Harga Bensin/L", "label-eff": "Konsumsi Motor", "res-fuel-needed": "Kebutuhan BBM", "res-est-cost": "Estimasi Biaya", "calc-footer": "*Data konsumsi otomatis mengambil data rata-rata motor Anda.", "logbook-title": "Logbook Digital", "btn-set-interval": "SETEL INTERVAL", "modal-reg-title": "Registrasi Motor", "label-vname": "Nama Motor", "label-initial-odo": "Odometer Awal", "label-trans": "Transmisi", "label-cooling": "Pendingin", "opt-radiator": "RADIATOR", "opt-air": "UDARA", "label-fuelsystem": "Bahan Bakar", "label-userlevel": "Level Pemahaman", "opt-beginner": "MASIH AWAM", "opt-expert": "SUDAH PAHAM", "btn-cancel": "Batal", "btn-reg": "DAFTARKAN", "modal-mod-title": "Modifikasi & Pengaturan", "btn-save-mod": "Simpan Perubahan", "btn-delete-v": "Hapus Kendaraan", "modal-interval-title": "Interval KM", "btn-apply": "TERAPKAN", "remaining-odo": "KM Sisa", "health-status": "KESEHATAN", "status-critical": "GANTI/SERVIS SEKARANG", "log-fuel": "ISI BBM", "log-update": "UPDATE KM", "log-replacement": "GANTI", "alert-km-back": "KM mundur!", "confirm-delete-log": "Hapus log?", "confirm-delete-v": "Hapus seluruh data motor ini?", "last-replacement": "Terakhir Ganti", "never": "Belum Pernah", "warning-title": "Komponen Perlu Diganti Segera"
             },
             en: {
-                "header-subtitle": "Advanced Maintenance Hub", "btn-register": "Register", "empty-title": "No Vehicles Yet", "btn-start-now": "START NOW", "odo-label": "Current Odometer", "avg-eff-label": "Average Efficiency", "monthly-cost-label": "Monthly Cost", "tab-service": "Service", "tab-fuel": "Fuel", "tab-calc": "Estimation", "form-service-title": "Record Service", "label-odo": "Odometer", "label-type": "Type", "opt-update-odo": "Update Odo Only", "opt-replacement": "Part Replacement/Service", "label-component": "Select Component", "label-date": "Date", "btn-save-activity": "SAVE ACTIVITY", "form-fuel-title": "Refuel", "label-liters": "Liters", "label-total-price": "Total Price", "btn-save-fuel": "SAVE REFUEL", "form-calc-title": "Trip Estimator", "label-dist": "Trip Distance (KM)", "label-fuel-price": "Gas Price/L", "label-eff": "Motor Consumption", "res-fuel-needed": "Fuel Needed", "res-est-cost": "Estimated Cost", "calc-footer": "*Consumption data is automatically taken from your vehicle average.", "logbook-title": "Digital Logbook", "btn-set-interval": "SET INTERVAL", "modal-reg-title": "Vehicle Registration", "label-vname": "Vehicle Name", "label-initial-odo": "Initial Odometer", "label-trans": "Transmission", "label-cooling": "Cooling", "opt-radiator": "RADIATOR", "opt-air": "AIR", "label-fuelsystem": "Fuel System", "label-userlevel": "Knowledge Level", "opt-beginner": "BEGINNER", "opt-expert": "EXPERT", "btn-cancel": "Cancel", "btn-reg": "REGISTER", "modal-mod-title": "Modification & Settings", "btn-save-mod": "Save Changes", "btn-delete-v": "Delete Vehicle", "modal-interval-title": "Interval KM", "btn-apply": "APPLY", "remaining-odo": "KM Left", "health-status": "HEALTH", "status-critical": "REPLACE/SERVICE NOW", "log-fuel": "REFUEL", "log-update": "ODO UPDATE", "log-replacement": "REPLACED", "alert-km-back": "KM going backwards!", "confirm-delete-log": "Delete log?", "confirm-delete-v": "Delete this vehicle entire data?", "last-replacement": "Last Service", "never": "Never"
+                "header-subtitle": "Advanced Maintenance Hub", "btn-register": "Register", "empty-title": "No Vehicles Yet", "btn-start-now": "START NOW", "odo-label": "Current Odometer", "avg-eff-label": "Average Efficiency", "monthly-cost-label": "Monthly Cost", "tab-service": "Service", "tab-fuel": "Fuel", "tab-calc": "Estimation", "form-service-title": "Record Service", "label-odo": "Odometer", "label-type": "Type", "opt-update-odo": "Update Odo Only", "opt-replacement": "Part Replacement/Service", "label-component": "Select Component", "label-date": "Date", "btn-save-activity": "SAVE ACTIVITY", "form-fuel-title": "Refuel", "label-liters": "Liters", "label-total-price": "Total Price", "btn-save-fuel": "SAVE REFUEL", "form-calc-title": "Trip Estimator", "label-dist": "Trip Distance (KM)", "label-fuel-price": "Gas Price/L", "label-eff": "Motor Consumption", "res-fuel-needed": "Fuel Needed", "res-est-cost": "Estimated Cost", "calc-footer": "*Consumption data is automatically taken from your vehicle average.", "logbook-title": "Digital Logbook", "btn-set-interval": "SET INTERVAL", "modal-reg-title": "Vehicle Registration", "label-vname": "Vehicle Name", "label-initial-odo": "Initial Odometer", "label-trans": "Transmission", "label-cooling": "Cooling", "opt-radiator": "RADIATOR", "opt-air": "AIR", "label-fuelsystem": "Fuel System", "label-userlevel": "Knowledge Level", "opt-beginner": "BEGINNER", "opt-expert": "EXPERT", "btn-cancel": "Cancel", "btn-reg": "REGISTER", "modal-mod-title": "Modification & Settings", "btn-save-mod": "Save Changes", "btn-delete-v": "Delete Vehicle", "modal-interval-title": "Interval KM", "btn-apply": "APPLY", "remaining-odo": "KM Left", "health-status": "HEALTH", "status-critical": "REPLACE/SERVICE NOW", "log-fuel": "REFUEL", "log-update": "ODO UPDATE", "log-replacement": "REPLACED", "alert-km-back": "KM going backwards!", "confirm-delete-log": "Delete log?", "confirm-delete-v": "Delete this vehicle entire data?", "last-replacement": "Last Service", "never": "Never", "warning-title": "Components Need Replacement"
             }
         };
 
@@ -422,6 +435,7 @@
             const grid = document.getElementById('componentGrid'); grid.innerHTML = '';
             const comps = { ...MASTER_COMPONENTS.shared, ...MASTER_COMPONENTS.trans[v.trans], ...MASTER_COMPONENTS.cooling[v.cooling], ...MASTER_COMPONENTS.fuel[v.fuelSystem] };
             const t = TRANSLATIONS[currentLang];
+            const criticalItems = [];
 
             for (const [name, config] of Object.entries(comps)) {
                 const logs = v.logs.filter(l => l.component === name && l.type === 'replacement');
@@ -433,6 +447,8 @@
                 const perc = Math.min(100, Math.max(0, (remaining / interval) * 100));
                 const isCritical = remaining <= 0;
                 
+                if (isCritical) criticalItems.push(name);
+
                 grid.innerHTML += `
                     <div class="card-ultimate p-6 rounded-[1.8rem] flex flex-col justify-between border-t-4 ${isCritical ? 'neon-border neon-shadow' : 'border-transparent'}">
                         <div>
@@ -447,6 +463,18 @@
                         ${isCritical ? `<p class="mt-3 text-[8px] text-red-500 font-black animate-pulse uppercase">${t['status-critical']}</p>` : `<p class="mt-3 text-[8px] opacity-40 font-black uppercase">${Math.round(perc)}% ${t['health-status']}</p>`}
                         ${v.userLevel === 'beginner' ? `<p class="mt-3 text-[10px] opacity-60 bg-white/5 p-2 rounded-lg italic">"${COMPONENT_INFO[currentLang][name] || name}"</p>` : ''}
                     </div>`;
+            }
+
+            const warningBox = document.getElementById('criticalWarningCard');
+            const warningList = document.getElementById('criticalList');
+            if (criticalItems.length > 0) {
+                warningBox.classList.remove('hidden');
+                warningList.innerHTML = criticalItems.map(item => `
+                    <span class="px-3 py-1.5 rounded-xl bg-red-500/20 text-red-500 text-[10px] font-black uppercase tracking-widest border border-red-500/30">
+                        ${item}
+                    </span>`).join('');
+            } else {
+                warningBox.classList.add('hidden');
             }
         }
 
